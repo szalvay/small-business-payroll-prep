@@ -124,9 +124,9 @@ skills/salon-spa-payroll/
   references/                questionnaire, config and input formats, POS mapping, connectors, state rules, lessons, auditor brief
   scripts/payroll.py         the command line
   scripts/spapay/            the engine (gates, calc, checks, audit, intake, rulebook, connectors, outputs)
-  assets/                    connector profiles, state presets, intake questions, starter config, sample workspace
+  assets/                    connector profiles, state presets, intake questions, starter config
 tests/                       engine tests (python3 -m unittest discover -s tests)
-tools/                       regenerate the sample, the reference docs and the images
+tools/                       regenerate the generated reference docs
 ```
 
 ## Contributing
@@ -135,6 +135,15 @@ Issues and pull requests are welcome, especially connector profiles for more pay
 systems, state presets confirmed against official sources, and real-world failure modes.
 Every new check comes with a test that reproduces the mistake. See
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Who made this
+
+Alison built it with Claude; Laszlo Szalvay helped and maintains it.
+
+- **The E&O Show:** Laszlo's show about the errors and the omissions, the wins and the
+  losses. [linktr.ee/eandoshow](https://linktr.ee/eandoshow)
+- **Want help rolling Claude out at your small business?** See
+  [Praecipio's Claude enablement for small business](https://www.praecipio.com/claude-enablement-small-business?utm_source=github&utm_medium=social&utm_campaign=eo_show).
 
 ## License
 

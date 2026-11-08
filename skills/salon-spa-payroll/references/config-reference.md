@@ -2,7 +2,7 @@
 
 The config is the owner's pay rules in machine form. `payroll.py validate` checks it;
 `payroll.py rulebook` renders it as the Pay Rules Book the owner signs. A complete,
-working example is `assets/sample_workspace/payroll_config.json`.
+working example is the sample's `payroll_config.json` (`payroll.py sample ./demo` builds it).
 
 Conventions:
 

@@ -5,8 +5,8 @@ This product is licensed under the Apache License, Version 2.0 (see LICENSE).
 
 The review workbook, run summary and Pay Rules Book name the Anton and Oswald
 typefaces (SIL Open Font License 1.1, available free from Google Fonts). The fonts
-are not included in this repository; HTML outputs load them from Google Fonts and
-fall back to system fonts when they are unavailable.
+are not included and nothing downloads them; install them for the full look, or
+the outputs fall back to system fonts.
 
 All people, businesses, rates and minimum wages in the sample workspace and tests
 are fictional.

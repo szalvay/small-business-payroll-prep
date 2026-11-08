@@ -8,7 +8,6 @@ from collections import defaultdict
 from .util import ZERO, fmt_money
 
 CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;700&display=swap');
 :root { --navy:#141034; --orange:#E58700; --yellow:#F8D300; --cream:#F6ECD4; --tint:#FBF6EA; }
 * { box-sizing:border-box; border-radius:0; box-shadow:none; }
 body { margin:0; background:var(--tint); color:var(--navy); font-family:Oswald, 'Arial Narrow', Arial, sans-serif; font-size:15px; line-height:1.5; }

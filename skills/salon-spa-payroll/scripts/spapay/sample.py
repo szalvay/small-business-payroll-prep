@@ -1,24 +1,18 @@
-#!/usr/bin/env python3
-"""Build the sample workspace: a made-up three-location spa with every tricky case.
+"""The sample workspace: a made-up three-location spa with every tricky case.
 
+`payroll.py sample <dir>` builds it on demand, so the plugin ships no data files.
 Everything here is fictional: the business, the people, the rates and the minimum
-wages (example values only). Re-run after changing the engine's input format:
-    python3 tools/make_sample.py
+wages (example values only). The same seed always builds the same spa.
 """
 import csv
 import datetime as dt
 import json
 import random
-import shutil
-import sys
 from collections import defaultdict
 from decimal import Decimal
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "salon-spa-payroll"
-DEST = SKILL / "assets" / "sample_workspace"
-sys.path.insert(0, str(SKILL / "scripts"))
+from .inputs import SPEC
 
 rng = random.Random(7)
 D = lambda x: Decimal(str(x))
@@ -385,10 +379,12 @@ def write_report(path, title, loc_label, start, end, headers, rows, name_key, nu
     wb.save(path)
 
 
-def main():
-    if DEST.exists():
-        shutil.rmtree(DEST)
-    DEST.mkdir(parents=True)
+def build_sample(dest):
+    """Write the sample workspace into dest (which must be empty or missing)."""
+    global rng
+    rng = random.Random(7)
+    DEST = Path(dest)
+    DEST.mkdir(parents=True, exist_ok=True)
     cfg = config()
     (DEST / "payroll_config.json").write_text(json.dumps(cfg, indent=2) + "\n")
     label_to_id = {}
@@ -406,7 +402,6 @@ def main():
         pdir = DEST / "periods" / pid
         for sub in ("raw", "inputs", "output"):
             (pdir / sub).mkdir(parents=True, exist_ok=True)
-        (pdir / "output" / ".keep").write_text("")
         roster = []
         for eid, first, last, role, home, rate, hire, term in STAFF:
             status = "Terminated" if term and dt.date.fromisoformat(term) <= end else "Active"
@@ -422,7 +417,7 @@ def main():
         write_csv(pdir / "raw" / "bamboohr_time_off_used.csv", ["Employee #", "Employee Name", "Date", "Time Off Type", "Hours"],
                   [{"Employee #": r["employee_id"], "Employee Name": "", "Date": dt.date.fromisoformat(r["date"]).strftime("%m/%d/%Y"),
                     "Time Off Type": {"sick": "Sick", "pto": "Paid Time Off"}[r["type"]], "Hours": r["hours"]} for r in time_off])
-        cols = lambda name: list(__import__("spapay.inputs", fromlist=["SPEC"]).SPEC[name])
+        cols = lambda name: list(SPEC[name])
         write_csv(pdir / "inputs" / "services.csv", cols("services"), services)
         write_csv(pdir / "inputs" / "addons.csv", cols("addons"), addons)
         write_csv(pdir / "inputs" / "sales.csv", cols("sales"), sales)
@@ -488,8 +483,4 @@ def main():
             "notes": "Sample period. Raw HRIS exports are in raw/; run hris-import to build roster.csv, pay_rates.csv and time_off.csv.",
         }
         (pdir / "period.json").write_text(json.dumps(period, indent=2) + "\n")
-    print(f"sample written to {DEST}")
-
-
-if __name__ == "__main__":
-    main()
+    return DEST

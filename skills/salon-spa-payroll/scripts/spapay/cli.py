@@ -208,13 +208,13 @@ def cmd_compile_intake(a):
 
 
 def cmd_sample(a):
-    src = ASSETS / "sample_workspace"
+    from .sample import build_sample
     dest = Path(a.destination)
     if dest.exists() and any(dest.iterdir()):
         print(f"{dest} is not empty")
         return 1
-    shutil.copytree(src, dest, dirs_exist_ok=True)
-    print(f"copied the sample spa workspace to {dest}. Next, as in references/getting-started.md:\n"
+    build_sample(dest)
+    print(f"built the sample spa workspace in {dest}. Next, as in references/getting-started.md:\n"
           f"  approve {dest} --by \"Your Name\"\n"
           f"  then for each folder in {dest}/periods, oldest first: hris-import <period> --roster <period>/raw/bamboohr_roster_export.csv "
           f"--time-off <period>/raw/bamboohr_time_off_used.csv, then run <period>")

@@ -9,7 +9,7 @@ card window, a manager override, a stipend and a scorecard bonus pool.
 
 ```bash
 P=<skill-dir>/scripts/payroll.py
-python3 $P sample ./demo                                   # copy the sample workspace
+python3 $P sample ./demo                                   # build the sample workspace
 python3 $P validate ./demo                                 # VALID, not yet approved
 python3 $P rulebook ./demo                                 # read demo/PAY_RULES_BOOK.html
 python3 $P approve ./demo --by "Your Name"                 # sign the rules

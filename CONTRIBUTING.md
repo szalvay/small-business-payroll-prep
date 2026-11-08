@@ -12,8 +12,8 @@ Thank you for helping make payroll less error-prone.
 - **State presets** live in `skills/salon-spa-payroll/assets/states/`. Cite the official
   source in `notes`; presets always ship with `confirmed_by_owner: false`.
 - **Generated files:** after changing `assets/intake/questions.json` or the input specs,
-  run `python3 tools/build_docs.py`. After changing the input format or engine behavior the
-  sample relies on, run `python3 tools/make_sample.py`.
+  run `python3 tools/build_docs.py`. The sample spa is built on demand by
+  `scripts/spapay/sample.py`; change it there when the input format changes.
 - **No real people.** Sample data, tests and issues must not contain real names, rates,
   emails or identifiers. Redact exports before attaching them to an issue.
 - Write in plain language. The people reading the outputs run spas, not software.

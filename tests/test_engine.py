@@ -400,7 +400,8 @@ class SampleAndIntake(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.ws = Path(self.tmp.name) / "ws"
-        shutil.copytree(SKILL / "assets" / "sample_workspace", self.ws)
+        from spapay.sample import build_sample
+        build_sample(self.ws)
 
     def tearDown(self):
         self.tmp.cleanup()
