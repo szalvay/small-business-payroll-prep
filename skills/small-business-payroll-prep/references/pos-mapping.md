@@ -1,4 +1,4 @@
-# Mapping POS and booking-system reports
+# Mapping POS, booking, job and time-clock reports
 
 The engine never reads a POS report directly. Claude reads each raw export in
 `raw/`, maps it into the canonical CSVs (`input-formats.md`), and records the report in
@@ -40,9 +40,9 @@ header text for each canonical column, rows to skip) so the next period is mecha
 
 | Input | What to look for | Never use |
 |---|---|---|
-| services | Service detail or service sales by provider, with actual service time per line | Scheduled, bookable or "work time" from a schedule report (it includes empty gaps) |
+| services | Service detail by provider, a job report by technician, a class roster by instructor, or flagged hours by technician: actual time or units per line | Scheduled, bookable or "work time" from a schedule report (it includes empty gaps) |
 | addons | Add-on / enhancement detail with the add-on code per line | The customer price as pay |
-| sales | Sales by employee: retail, memberships, packages, gift cards, with the dollar amount and a type | A "% of sales" column as the commission base |
+| sales | Sales by employee with line detail: product category, item, the dollar amount, returns marked as returns, and a type (new, renewal, employee purchase) | A "% of sales" column as the commission base, or a net figure that already hides returns |
 | tips | Tips by provider (card tips; declared cash tips if tracked) | Tips netted against anything |
 | time_entries | Time clock detail, or a time-category report (lobby, training, meetings) | A clock export covering days outside the pay period |
 | time_off | The HR system's time-off-used report for exactly the period | A balances report |
@@ -74,19 +74,32 @@ header text for each canonical column, rows to skip) so the next period is mecha
 These are patterns seen in real exports, not official documentation. Report names and
 layouts change; trust the header text in front of you.
 
-**Meevo.** Reports are identified by codes. Employee service detail reports put each
-provider in a "For:" block with a "Total for Services" line; actual service hours sit in
-a column whose position differs by location and can move between periods, so find it by
-header every time. The employee payroll report is a good source for card tips. The
-add-on detail report carries the add-on type code (the part before the colon). Time
-clock reports by week must be pulled for the pay-period dates only. Category-filtered
-reports (front desk only, service providers only) depend on the filter being set in the
-UI; check the people in the file match the category.
+**Salon, spa and wellness booking systems.** Look for a payroll or commission report by
+staff member with line detail, a sales-by-staff report, a tips report and the time clock
+export. Some systems identify reports by codes rather than names. Service detail reports
+often put each provider in a "For:" block with a total line, and the actual service
+hours column can sit in a different position by location and move between periods, so
+find it by header every time. Add-on reports often carry a type code before a colon.
+Weekly time reports must be pulled for the pay-period dates only. Reports filtered by
+staff category (front desk only, providers only) depend on the filter being set in the
+system; check that the people in the file match the category. Prefer line-level detail
+to summary reports; summaries are useful for the `totals` you record in `sources`.
 
-**Mindbody, Boulevard, Vagaro, Zenoti, Phorest, Square Appointments and others.** Look
-for a payroll or commission report by staff member with line detail, a sales-by-staff
-report, a tips report and the time clock export. Prefer line-level detail exports to
-summary reports; summaries are useful for the `totals` you record in `sources`.
+**Retail POS systems.** Look for a sales-by-employee (or by associate, by clerk) report
+with line detail: date, category, item, quantity, net amount and whether the line was a
+return. Category names drive commission rates, so map the POS's categories to the ones
+in the config and keep the mapping in `intake_notes`. Returns must come through as their
+own lines; a net-sales figure per person hides them. Employee purchases and discounts are
+often a line type or a flag; carry them in `item_type` so the config can exclude them.
+
+**Time clocks and scheduling apps.** Export punches or approved time cards for exactly
+the pay-period dates, one row per person per day. Make sure split shifts and shifts at a
+second location come through with the right location.
+
+**Job, class and shop systems** (field service, fitness, auto repair). Look for a report
+of completed jobs, classes or repair orders by person with hours or units and revenue
+per line. For flat-rate technicians, map flagged (book) hours as `service_hours`; for
+per-class pay, each class taught is one service line.
 
 If a business uses a system not listed here, ask the owner which report they use today
 for each input, map it once with them watching, and save the mapping in `intake_notes`.

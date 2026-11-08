@@ -1,0 +1,1442 @@
+{
+  "about": "The intake question bank. Claude asks the industry and pay-model questions first, then walks the owner through the core sections that apply to how they pay people and the packs for their industry, one question at a time (references/questionnaire.md is generated from this file by tools/build_docs.py). The intake workbook's Questions tab lists the same questions, filtered by industry when one is chosen. 'maps_to' names where the answer lands in payroll_config.json or period.json. A section's 'pay_models' means ask it only when someone is paid that way; a pack's 'industries' means ask it only for those industries.",
+  "sections": [
+    {
+      "id": "start",
+      "title": "Before we start",
+      "intro": "Have these handy if you can: one or two recent payroll registers, an offer letter or comp plan for each kind of role, the list of reports you pull from your POS, booking, job or time-clock system, and an export of your roster from your HR or payroll system. None of it is required to begin; the interview works from memory and fills gaps later.",
+      "questions": [
+        {
+          "id": "start.1",
+          "q": "Which industry are you in: Technology & Software, Entertainment, Healthcare & Life Sciences, Manufacturing & Industrial, Financial Services, Energy & Utilities, Retail, Education, Government & Defense, or something else? What kind of business within it?",
+          "why": "It decides which industry questions follow and which known gaps to raise early. A business that spans two answers both.",
+          "maps_to": "company.industry"
+        },
+        {
+          "id": "start.2",
+          "q": "How is anyone paid? Name all that apply: hourly, salary, per service, job, class or unit (piece rate), commission or spiffs, tips.",
+          "why": "It decides which core sections come next. Nobody on piece rate means no service-pay or add-on questions; nobody tipped means no tips questions.",
+          "maps_to": "roles[].pay_basis"
+        },
+        {
+          "id": "start.3",
+          "q": "In one or two sentences, how does payroll work today, from closing the period to people getting paid?",
+          "why": "Shows which steps are manual, who does them and where errors slip in.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "start.4",
+          "q": "What went wrong in past payrolls that you never want to see again?",
+          "why": "Every past mistake becomes a check. Most real payroll errors are omissions (a missing export, a dropped person), not arithmetic.",
+          "maps_to": "intake_notes; checks",
+          "follow_up": "Was it caught before payday? By whom?"
+        },
+        {
+          "id": "start.5",
+          "q": "Who will run this each period, who reviews the numbers, and who submits to the payroll system?",
+          "why": "The review workbook and sign-off lines are written for these people.",
+          "maps_to": "systems.payroll_settings.reviewer / submitter"
+        }
+      ]
+    },
+    {
+      "id": "company",
+      "title": "The business, its entities and locations",
+      "intro": "Overtime is counted per legal employer, and minimum wage is set by where the work happens. Getting entities and locations right first prevents two of the most expensive mistakes.",
+      "questions": [
+        {
+          "id": "company.1",
+          "q": "What is the business called, and how often do you pay (weekly, every two weeks, twice a month, monthly)?",
+          "why": "Sets the pay frequency, which drives salary per period.",
+          "maps_to": "company.name, company.pay_frequency"
+        },
+        {
+          "id": "company.2",
+          "q": "How many days after the period ends is payday?",
+          "why": "Sets how much time the export, review and fix loop has; final-pay deadlines for people who leave can be sooner.",
+          "maps_to": "period.json pay_date"
+        },
+        {
+          "id": "company.3",
+          "q": "What day does your workweek start? (Check your payroll system; it is often Sunday.)",
+          "why": "Weekly overtime is judged on this fixed 7-day week, not on the pay period.",
+          "maps_to": "company.workweek_start"
+        },
+        {
+          "id": "company.4",
+          "q": "List each legal entity (LLC or corporation) that employs people. Are all locations under one entity or separate ones?",
+          "why": "Hours at two locations of the same employer are added together for overtime. Separate entities are generally counted separately; confirm with your payroll provider if ownership is shared.",
+          "maps_to": "employers[], locations[].employer_id, company.ot_aggregation"
+        },
+        {
+          "id": "company.5",
+          "q": "List every location: a short code, its name, city and state, and which entity runs it.",
+          "why": "Every hour and every sale is tied to a location for minimum wage, overtime and cost reporting.",
+          "maps_to": "locations[]"
+        },
+        {
+          "id": "company.6",
+          "q": "What is the minimum wage at each location today, and when does it next change? Some cities and counties set their own.",
+          "why": "Non-service time and sick pay are often paid at minimum wage, and every workweek must clear it. Oregon, for example, has three regional rates.",
+          "maps_to": "locations[].min_wage[] with effective_from"
+        },
+        {
+          "id": "company.7",
+          "q": "How does each location appear in your POS, booking or job reports and in your HR system (names, numbers, codes)?",
+          "why": "So a report labelled '0102' or 'Eastside Salem' lands on the right location.",
+          "maps_to": "locations[].pos_labels, locations[].hris_labels"
+        },
+        {
+          "id": "company.8",
+          "q": "Does your payroll system track locations as departments, divisions or cost centers? What are the codes?",
+          "why": "Lets the payroll file split pay by location.",
+          "maps_to": "locations[].payroll_code, systems.payroll_settings.split_by_location"
+        }
+      ]
+    },
+    {
+      "id": "systems",
+      "title": "Systems",
+      "intro": "The engine never logs into anything. It reads exports you download. These answers decide which export layouts to expect and which payroll file to produce.",
+      "questions": [
+        {
+          "id": "systems.1",
+          "q": "Which POS, booking or job-management system do you use? Which reports do you pull for payroll today?",
+          "why": "Each report becomes one canonical input file. Claude maps the columns once and records them.",
+          "maps_to": "systems.pos, systems.pos_reports[]"
+        },
+        {
+          "id": "systems.2",
+          "q": "Which HR system holds your roster and pay rates (BambooHR, HiBob, Paylocity, ADP, Gusto, a spreadsheet)?",
+          "why": "Picks the HRIS on-ramp that turns its roster and time-off exports into inputs.",
+          "maps_to": "systems.hris"
+        },
+        {
+          "id": "systems.3",
+          "q": "Which payroll system pays people? Do you upload hours, dollar amounts, or both?",
+          "why": "Picks the outbound file layout.",
+          "maps_to": "systems.payroll, systems.payroll_exports"
+        },
+        {
+          "id": "systems.4",
+          "q": "Do staff clock in and out? In which system? Do commissioned or piece-rate staff clock too, or only hourly staff?",
+          "why": "Decides whether hours worked come from the clock or from service time plus recorded non-service time.",
+          "maps_to": "roles[].hours_worked_source"
+        },
+        {
+          "id": "systems.5",
+          "q": "In your payroll system, what are the exact names of each pay type you upload (for example 'Commission', 'Credit Card Tips')?",
+          "why": "An upload with a pay type name that is off by one character is rejected or, worse, mapped to the wrong earning.",
+          "maps_to": "pay_codes{}.code"
+        },
+        {
+          "id": "systems.6",
+          "q": "Which employee number does your payroll system use? Is it the same as the HR system's?",
+          "why": "The payroll file must carry the number the payroll system knows.",
+          "maps_to": "roster payroll_id"
+        }
+      ]
+    },
+    {
+      "id": "roles",
+      "title": "Roles and who is who",
+      "intro": "A role is a way of being paid. Most small businesses have three to six.",
+      "questions": [
+        {
+          "id": "roles.1",
+          "q": "List each role (for example sales associate, key holder, barista, technician, instructor, stylist, massage therapist, front desk, manager).",
+          "why": "Every rule hangs off a role.",
+          "maps_to": "roles[]"
+        },
+        {
+          "id": "roles.2",
+          "q": "For each role: is it paid hourly on the clock, salary, per hour of service or flagged hour, per service, class or job, or a percent of service revenue?",
+          "why": "The pay basis decides which inputs the role needs and how its hours are counted.",
+          "maps_to": "roles[].pay_basis"
+        },
+        {
+          "id": "roles.3",
+          "q": "Which service categories does each service role perform (massage, facial, haircut, class, repair, cleaning...)?",
+          "why": "A dual-role person's services are paid at the rate of the role that matches the category.",
+          "maps_to": "roles[].service_categories",
+          "pay_models": [
+            "piece"
+          ]
+        },
+        {
+          "id": "roles.4",
+          "q": "Which roles receive tips?",
+          "why": "If a tipped role has no tips file, the run stops instead of paying zero tips.",
+          "maps_to": "roles[].tips"
+        },
+        {
+          "id": "roles.5",
+          "q": "Is any salaried role exempt from overtime? Is any manager paid hourly?",
+          "why": "Exempt salary is not checked for overtime; non-exempt staff always are.",
+          "maps_to": "roles[].exempt"
+        },
+        {
+          "id": "roles.6",
+          "q": "How do your HR system's job titles map to these roles?",
+          "why": "Lets the HRIS import assign roles without hand edits.",
+          "maps_to": "roles[].hris_titles"
+        },
+        {
+          "id": "roles.7",
+          "q": "Does anyone hold two roles (for example a sales associate who also covers the cafe, or a massage therapist who is also an esthetician)? At what rate is each paid?",
+          "why": "Their services are split by category and paid at each role's rate; their incentives follow the role that earned them.",
+          "maps_to": "employee_overrides[].secondary_role, rates"
+        },
+        {
+          "id": "roles.8",
+          "q": "Does anyone work at more than one location? Which is their home location?",
+          "why": "Their hours are combined for overtime across locations of the same employer, and time off is charged to the home location.",
+          "maps_to": "roster home_location"
+        },
+        {
+          "id": "roles.9",
+          "q": "Does anyone have a pay deal that differs from the standard plan (a ramp, a guaranteed rate, a special spiff)?",
+          "why": "Special deals are the most common source of missed pay. Each one becomes an override or a rate row with dates.",
+          "maps_to": "employee_overrides[], pay_rates effective_from",
+          "follow_up": "Where is it written down? When does it change next?"
+        },
+        {
+          "id": "roles.10",
+          "q": "Are there contractors, booth renters or 1099 instructors? (They are outside this payroll and should not appear in it.)",
+          "why": "Keeps them out of the employee checks.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "roles.11",
+          "q": "Do names in your POS, booking or job system differ from legal names (nicknames, 'NICK: Last, First', capitalization)?",
+          "why": "Name aliases stop one person appearing as two.",
+          "maps_to": "employee_overrides[].pos_names"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "title": "Service, job and class pay",
+      "intro": "For anyone paid by the hour of service, the job, the class or a share of revenue, this is most of the paycheck. The most damaging error is paying from the wrong column or the wrong report: scheduled time instead of actual, customer price instead of the pay rate.",
+      "questions": [
+        {
+          "id": "service.1",
+          "q": "Which report is the single source of truth for service hours, jobs or classes? Is it actual time or flagged hours, never scheduled or bookable time?",
+          "why": "Scheduled or bookable time includes empty gaps and overstates pay. The engine pays only the service-hours column of the service report.",
+          "maps_to": "systems.pos_reports (services)"
+        },
+        {
+          "id": "service.2",
+          "q": "Does that report total each person's hours and count? (Those totals are recorded each period and checked.)",
+          "why": "If the mapped rows do not add up to the report's own totals, the run stops.",
+          "maps_to": "period.json sources[].totals"
+        },
+        {
+          "id": "service.3",
+          "q": "What is each person's service, job or class rate, and where is it kept?",
+          "why": "Rates come from the HR export or a rates file, with an effective date for every change.",
+          "maps_to": "pay_rates.csv"
+        },
+        {
+          "id": "service.4",
+          "q": "Do upgrades, add-on minutes or extensions count as service time?",
+          "why": "Upgrade codes often carry real service minutes that must be paid to the right role.",
+          "maps_to": "intake_notes; services mapping"
+        },
+        {
+          "id": "service.5",
+          "q": "How are refunds, comps, no-shows and late cancellations handled for pay?",
+          "why": "Refunded lines are negative rows; a paid no-show fee may or may not pay the person who was booked.",
+          "maps_to": "services refund rows, adjustments"
+        },
+        {
+          "id": "service.6",
+          "q": "When two people share a service or job (couples massage, a two-person crew), who gets credit?",
+          "why": "The report must credit each person their own time.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "service.7",
+          "q": "Do rates change by step, tenure or performance during the year? How are you told?",
+          "why": "A missed step increase is an underpayment that compounds. Each change is a dated rate row.",
+          "maps_to": "pay_rates effective_from"
+        },
+        {
+          "id": "service.8",
+          "q": "If someone paid by the service or job clocks in, is the time between clients or jobs paid separately? (Some states require it for piece-rate pay.)",
+          "why": "California-style rules need non-productive time paid on its own.",
+          "maps_to": "state_rules[].piece_rate_nonproductive_separate"
+        }
+      ],
+      "pay_models": [
+        "piece"
+      ]
+    },
+    {
+      "id": "time",
+      "title": "Time paid outside the main work",
+      "intro": "Lobby or floor time, training, meetings and drive time between jobs. For staff paid by the service, job or class, this time lives in a different report and is where they are most often underpaid.",
+      "questions": [
+        {
+          "id": "time.1",
+          "q": "Which kinds of time outside the main work do you pay: lobby or floor time, training, being trained, training others, meetings, cleaning, drive time between jobs, waiting?",
+          "why": "Each kind gets its own rule; a kind with no rule stops the run rather than paying zero.",
+          "maps_to": "time_pay[]"
+        },
+        {
+          "id": "time.2",
+          "q": "At what rate is each paid: minimum wage, the person's own rate, a fixed rate, or their regular rate?",
+          "why": "The rate basis per role and kind.",
+          "maps_to": "time_pay[].basis, fixed_rate"
+        },
+        {
+          "id": "time.3",
+          "q": "Which report holds that time? Is it the same report for every location?",
+          "why": "Becomes the time entries input; it is the only place training and lobby hours come from.",
+          "maps_to": "systems.pos_reports (time_entries)"
+        },
+        {
+          "id": "time.4",
+          "q": "Are there caps (for example 4 lobby hours a month)? What happens above the cap?",
+          "why": "Caps are a policy; hours worked above them must still be paid. The engine pays what was recorded and flags it.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "time.5",
+          "q": "What pay type name does each kind go under in your payroll system (for example Training covers both trainee and trainer)?",
+          "why": "Pay type names must match the payroll system exactly.",
+          "maps_to": "time_pay[].pay_code, pay_codes"
+        },
+        {
+          "id": "time.6",
+          "q": "Do any staff work in a state that requires paid rest or recovery periods for piece-rate workers?",
+          "why": "Those periods are paid at the regular rate, not minimum wage.",
+          "maps_to": "time_pay basis regular_rate"
+        }
+      ],
+      "pay_models": [
+        "piece"
+      ]
+    },
+    {
+      "id": "addons",
+      "title": "Add-ons, upsells and enhancements",
+      "intro": "Add-on reports usually show the customer price. Paying that price instead of your spiff rate is a classic overpayment, and a code nobody listed silently pays nothing.",
+      "questions": [
+        {
+          "id": "addons.1",
+          "q": "List every add-on, upsell or enhancement code your system uses and what you pay for each one. Include the ones that pay nothing.",
+          "why": "Every code gets a rate, even $0. A new code with no rate stops the run until you decide.",
+          "maps_to": "incentives[source=addons].rates[]"
+        },
+        {
+          "id": "addons.2",
+          "q": "Do codes share a prefix (for example CBD, CBD-SCENTED, CBD-UNSCENTED all pay the same)?",
+          "why": "One prefix rule covers the family.",
+          "maps_to": "rates[].match = code_prefix"
+        },
+        {
+          "id": "addons.3",
+          "q": "Which roles earn add-on pay? Does it pay differently by role?",
+          "why": "Role gating per incentive.",
+          "maps_to": "incentives[].eligible_roles"
+        },
+        {
+          "id": "addons.4",
+          "q": "Do any add-ons pay only certain people (a certification, a pilot)?",
+          "why": "Restricted rates pay only the named people; everyone else's units are listed as unpaid.",
+          "maps_to": "rates[].only_employees"
+        },
+        {
+          "id": "addons.5",
+          "q": "Does the add-on report show a code, a description, or 'CODE: Description'?",
+          "why": "Matching works on the code before the colon.",
+          "maps_to": "addons mapping"
+        }
+      ],
+      "pay_models": [
+        "piece"
+      ]
+    },
+    {
+      "id": "sales",
+      "title": "Sales commissions, memberships, packages and gift cards",
+      "intro": "Sales incentives are often monthly or seasonal. The question is always: which sales, by whom, over which dates, at what rate.",
+      "questions": [
+        {
+          "id": "sales.1",
+          "q": "Do you pay commission on product or retail sales? What percent, on which products or categories, to which roles, and is it paid every period or monthly?",
+          "why": "Monthly incentives are paid only on the month-end run, over the whole month.",
+          "maps_to": "incentives (retail)"
+        },
+        {
+          "id": "sales.2",
+          "q": "How are membership, subscription, loyalty or service-plan sign-ups paid? Per sale, tiered (first 5 at one rate, then another), or a percent?",
+          "why": "Tiers are counted per person per location unless you say otherwise.",
+          "maps_to": "incentives (memberships).tiers, tier_method, tier_scope"
+        },
+        {
+          "id": "sales.3",
+          "q": "Which membership transactions do NOT pay: renewals, upgrades, transfers, conversions, cancellations within a grace period?",
+          "why": "Exclusions are explicit rules, so they are applied the same way every time.",
+          "maps_to": "incentives[].exclude"
+        },
+        {
+          "id": "sales.4",
+          "q": "Do gift card or package sales pay commission? Always, or only in seasonal windows (holidays, Mother's Day)? Exact dates?",
+          "why": "Windows are set per period; sales just outside a window are reported, not silently dropped.",
+          "maps_to": "incentives (gift cards), period.json windows"
+        },
+        {
+          "id": "sales.5",
+          "q": "Is the commission base the sale amount, the quantity, or something else? Which report column?",
+          "why": "Paying on a percentage column instead of the dollar column has produced commissions of a penny.",
+          "maps_to": "sales mapping, incentives[].kind"
+        },
+        {
+          "id": "sales.6",
+          "q": "Do managers earn an override on their location's sales? On which sales, at what rate?",
+          "why": "Location-credit incentives pay named people on the whole location's total.",
+          "maps_to": "incentives[].credit = location, recipients"
+        },
+        {
+          "id": "sales.7",
+          "q": "If someone sells at a location where they did not work any hours that period, should they still be paid there?",
+          "why": "This edge case dropped real commissions before. The engine pays the seller wherever the sale happened.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "sales.8",
+          "q": "Are refunds and chargebacks clawed back from commission? Within what time?",
+          "why": "Refund rows reduce the base; the engine never claws back below zero without your adjustment.",
+          "maps_to": "sales refund rows, adjustments"
+        }
+      ],
+      "pay_models": [
+        "commission"
+      ]
+    },
+    {
+      "id": "tips",
+      "title": "Tips",
+      "questions": [
+        {
+          "id": "tips.1",
+          "q": "Are card tips paid on the paycheck in full to the person who earned them?",
+          "why": "Tips pass through untouched and are reconciled to the tips report total.",
+          "maps_to": "R-TIPS"
+        },
+        {
+          "id": "tips.2",
+          "q": "Do you pool or share tips (for example with the front desk or the kitchen)? On what formula?",
+          "why": "Pooling needs an explicit rule and is regulated; confirm it with your payroll provider or counsel first.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "tips.3",
+          "q": "Are cash tips declared through payroll? Only reported, or also paid?",
+          "why": "Declared cash tips are usually reported for taxes, not paid again.",
+          "maps_to": "company.cash_tips"
+        },
+        {
+          "id": "tips.4",
+          "q": "Do you add a service charge to bills? Is any of it paid to staff?",
+          "why": "A service charge is not a tip; if shared it is wages and belongs in the regular rate.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "tips.5",
+          "q": "Which report gives tips per person per day? Does it include prepaid tips or tips on gift cards?",
+          "why": "The tips report is also proof of who worked; someone with tips and no pay is a red flag.",
+          "maps_to": "systems.pos_reports (tips)"
+        }
+      ],
+      "pay_models": [
+        "tips"
+      ]
+    },
+    {
+      "id": "timeoff",
+      "title": "Sick time, PTO and holidays",
+      "intro": "A missing time-off export pays nobody's sick hours, and every other check still passes. The engine will not run without either the rows or a statement that nobody took time off.",
+      "questions": [
+        {
+          "id": "timeoff.1",
+          "q": "How is sick time paid for each role? (Piece-rate and commissioned staff are often paid at minimum wage or their regular rate; check your state.)",
+          "why": "Sick pay rules by role and type.",
+          "maps_to": "time_off_pay[]"
+        },
+        {
+          "id": "timeoff.2",
+          "q": "Do you offer PTO, vacation, holidays, bereavement or jury duty pay? To whom, at what rate?",
+          "why": "Each type needs a rule, or the run stops.",
+          "maps_to": "time_off_pay[]"
+        },
+        {
+          "id": "timeoff.3",
+          "q": "Where does time off come from: your HR system's time-off report, the payroll system, a spreadsheet?",
+          "why": "Becomes the time-off input for exactly the pay period dates.",
+          "maps_to": "systems.hris, time_off.csv"
+        },
+        {
+          "id": "timeoff.4",
+          "q": "Does your payroll system already pay approved time off from its own records?",
+          "why": "If it does, the engine shows time off in the review but leaves it out of the upload so it is not paid twice.",
+          "maps_to": "pay_codes[sick|pto].export_as = none"
+        },
+        {
+          "id": "timeoff.5",
+          "q": "For people who work at several locations, which location carries their time off?",
+          "why": "Time off is charged to the home location.",
+          "maps_to": "roster home_location"
+        }
+      ]
+    },
+    {
+      "id": "overtime",
+      "title": "Overtime and the minimum-wage floor",
+      "intro": "Overtime is per workweek, never per pay period, and a week that straddles two pay periods is judged on its combined hours. Commissions and non-discretionary bonuses raise the rate overtime is paid at.",
+      "questions": [
+        {
+          "id": "overtime.1",
+          "q": "Do you have staff in a state with daily overtime, double time or seventh-day rules (for example California)?",
+          "why": "Loads the state's preset, which you confirm with your payroll provider or counsel.",
+          "maps_to": "state_rules[]"
+        },
+        {
+          "id": "overtime.2",
+          "q": "Does anyone ever work more than 40 hours in a week, counting all their time, including at a second location?",
+          "why": "Piece-rate staff earn overtime too, as a half-time premium on their regular rate.",
+          "maps_to": "R-OT"
+        },
+        {
+          "id": "overtime.3",
+          "q": "Are commissions, spiffs and bonuses included when you figure the overtime rate today?",
+          "why": "Non-discretionary incentives belong in the regular rate. Monthly ones are trued up across the weeks they were earned.",
+          "maps_to": "incentives[].include_in_regular_rate"
+        },
+        {
+          "id": "overtime.4",
+          "q": "If a week's pay ever came out under minimum wage for the hours worked, would you rather be stopped to decide, or have a make-up line added automatically?",
+          "why": "The floor is checked every workweek.",
+          "maps_to": "company.min_wage_makeup (flag or auto)"
+        },
+        {
+          "id": "overtime.5",
+          "q": "When the time clock is exported, is it pulled for exactly the pay period dates (not full weeks)?",
+          "why": "A full-week export on a boundary week re-pays days already paid last period.",
+          "maps_to": "period.json sources date checks"
+        }
+      ]
+    },
+    {
+      "id": "managers",
+      "title": "Managers, stipends and bonus pools",
+      "questions": [
+        {
+          "id": "managers.1",
+          "q": "List each manager, their annual salary (or per-period pay), and the locations they run.",
+          "why": "Salary per period and the cost split across locations.",
+          "maps_to": "pay_rates (salary_annual), manager_allocation[]"
+        },
+        {
+          "id": "managers.2",
+          "q": "Are any managers paid a stipend for covering another location? From when, until when?",
+          "why": "Stipends with an end date stop on their own instead of being paid forever.",
+          "maps_to": "stipends[] effective_from / effective_through"
+        },
+        {
+          "id": "managers.3",
+          "q": "How are manager bonuses earned? Which metrics, which thresholds, what is each worth, and how often?",
+          "why": "Each metric is a pass/fail rule with a weight; the pool per location is fixed.",
+          "maps_to": "bonus_pools[].metrics"
+        },
+        {
+          "id": "managers.4",
+          "q": "Where do the metric numbers come from (a scorecard report?) and for which dates?",
+          "why": "Recorded each bonus period as location metrics.",
+          "maps_to": "location_metrics.csv"
+        },
+        {
+          "id": "managers.5",
+          "q": "Who is paid each location's bonus? Can two people both receive it in full, or is it shared?",
+          "why": "Recipients and shares per location, separate from who manages it day to day.",
+          "maps_to": "bonus_pools[].recipients"
+        },
+        {
+          "id": "managers.6",
+          "q": "Is the bonus discretionary (you decide after the fact) or promised in advance?",
+          "why": "Promised bonuses for non-exempt staff belong in the overtime regular rate.",
+          "maps_to": "bonus_pools[].include_in_regular_rate"
+        }
+      ]
+    },
+    {
+      "id": "adjustments",
+      "title": "One-off pay",
+      "questions": [
+        {
+          "id": "adjustments.1",
+          "q": "How do one-off items happen today: signing bonuses, referral bonuses, back pay, reimbursements?",
+          "why": "Each one is an adjustments row naming who approved it, so it survives a rebuild and shows in the audit trail.",
+          "maps_to": "adjustments.csv"
+        },
+        {
+          "id": "adjustments.2",
+          "q": "What pay type names do those use in your payroll system? Are reimbursements non-taxable there?",
+          "why": "A one-off that reuses a regular pay type name gets mixed into the wrong reconciliation.",
+          "maps_to": "pay_codes, adjustments taxable"
+        },
+        {
+          "id": "adjustments.3",
+          "q": "Who is allowed to approve a one-off payment?",
+          "why": "Recorded on every adjustment line.",
+          "maps_to": "adjustments approved_by"
+        }
+      ]
+    },
+    {
+      "id": "people_changes",
+      "title": "Hires, terminations and changes",
+      "questions": [
+        {
+          "id": "people_changes.1",
+          "q": "How do you learn about new hires, terminations, leaves and rate changes before payroll?",
+          "why": "Terminated staff still appear in POS reports; new hires may not appear in a report pulled with an old filter.",
+          "maps_to": "roster status, hire_date, termination_date"
+        },
+        {
+          "id": "people_changes.2",
+          "q": "When someone leaves, how is their final pay handled, and how fast?",
+          "why": "Final-pay deadlines vary by state and can be earlier than the next payday. The run reminds you each time.",
+          "maps_to": "GATE_FINAL_PAY"
+        },
+        {
+          "id": "people_changes.3",
+          "q": "If someone is active but shows no hours, services or time off, what is usually going on?",
+          "why": "Silence is a warning: a filtered export, a wrong location, or a leave nobody recorded.",
+          "maps_to": "GATE_NO_ACTIVITY"
+        },
+        {
+          "id": "people_changes.4",
+          "q": "Have you paid anyone off-cycle recently whose activity might show up again in this period's reports?",
+          "why": "Prevents paying the same commission twice.",
+          "maps_to": "adjustments, roster"
+        }
+      ]
+    },
+    {
+      "id": "pack_technology",
+      "title": "Technology & Software",
+      "intro": "Sales commission, exempt status and on-call time.",
+      "industries": [
+        "technology"
+      ],
+      "questions": [
+        {
+          "id": "technology.1",
+          "q": "How are sales reps paid: a percent of bookings or revenue, a flat amount per deal, or a rate that rises once they hit quota?",
+          "why": "Per-deal and percent commissions are built in. A rate that changes at quota (an accelerator) is not, so it is entered as an adjustment.",
+          "maps_to": "incentives; adjustments"
+        },
+        {
+          "id": "technology.2",
+          "q": "Is commission earned when the deal is booked, invoiced, or paid by the customer? Is it paid every period, monthly or quarterly?",
+          "why": "Decides which report and dates count. Quarterly payouts are entered as adjustments or a monthly incentive.",
+          "maps_to": "incentives[].frequency; period.json windows"
+        },
+        {
+          "id": "technology.3",
+          "q": "Which roles are salaried and exempt, and which are hourly (support, QA, interns)? Has each exempt role been checked against the salary threshold where the person works?",
+          "why": "Misclassified hourly work is the most common wage claim in tech; the engine pays overtime only to non-exempt roles.",
+          "maps_to": "roles[].exempt"
+        },
+        {
+          "id": "technology.4",
+          "q": "Is on-call or after-hours support paid? A flat amount per shift, or hours when paged?",
+          "why": "A flat on-call amount is a stipend; time spent working when paged is hours worked.",
+          "maps_to": "stipends[]; time_pay[]"
+        },
+        {
+          "id": "technology.5",
+          "q": "Are bonuses promised in advance (a formula or target) or decided after the fact?",
+          "why": "Promised bonuses raise the overtime rate for non-exempt staff.",
+          "maps_to": "bonus_pools[]; adjustments include_in_regular_rate"
+        },
+        {
+          "id": "technology.6",
+          "q": "Do people work remotely from several states? Which state is each person's work location?",
+          "why": "Minimum wage, overtime and sick leave follow where the work is done.",
+          "maps_to": "locations[]; roster home_location"
+        }
+      ]
+    },
+    {
+      "id": "pack_entertainment",
+      "title": "Entertainment",
+      "intro": "Calls, events, venues and gratuities.",
+      "industries": [
+        "entertainment"
+      ],
+      "questions": [
+        {
+          "id": "entertainment.1",
+          "q": "Are event or venue crew paid hourly, by the call or shift, or a flat day rate?",
+          "why": "Hourly and salary are built in; a flat day rate works as a per-service rate with one service per day worked.",
+          "maps_to": "roles[].pay_basis"
+        },
+        {
+          "id": "entertainment.2",
+          "q": "Do you guarantee a minimum number of paid hours per call or shift?",
+          "why": "Minimum-call pay is not computed; short calls are topped up in the time export or entered as adjustments.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "entertainment.3",
+          "q": "Are tips, event gratuities or automatic service charges shared with staff? On what formula?",
+          "why": "The engine pays the tips the export credits to each person; shares and service charges are worked out before mapping.",
+          "maps_to": "tips mapping; adjustments"
+        },
+        {
+          "id": "entertainment.4",
+          "q": "Are any crew covered by a union agreement with its own scales, fringe or meal penalties?",
+          "why": "Union scales, fringe and penalties are not computed; union payroll is not a fit yet.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "entertainment.5",
+          "q": "Do staff work at more than one venue? Are the venues under the same legal company?",
+          "why": "Hours at venues of the same employer add up for overtime.",
+          "maps_to": "employers[]; company.ot_aggregation"
+        },
+        {
+          "id": "entertainment.6",
+          "q": "Do you pay spiffs on tickets, memberships, party packages or concessions?",
+          "why": "Each becomes an incentive on sales.",
+          "maps_to": "incentives (sales)"
+        }
+      ]
+    },
+    {
+      "id": "pack_clinics",
+      "title": "Clinics and practices",
+      "intro": "Per-visit and production pay, guarantees and call.",
+      "industries": [
+        "healthcare"
+      ],
+      "questions": [
+        {
+          "id": "clinics.1",
+          "q": "Are providers paid hourly, per visit, or on production (a percent of what they bill or collect)?",
+          "why": "Per visit is per-service pay; production is a percent of service revenue.",
+          "maps_to": "roles[].pay_basis"
+        },
+        {
+          "id": "clinics.2",
+          "q": "If on production: is it on billed charges or collections? Which report, for which dates?",
+          "why": "Collections arrive later than visits; the report and its window must be fixed in advance.",
+          "maps_to": "services mapping; period.json windows"
+        },
+        {
+          "id": "clinics.3",
+          "q": "Is there a guaranteed minimum (daily or per period) against production?",
+          "why": "A guarantee against production is not computed; the top-up is entered as an adjustment.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "clinics.4",
+          "q": "Do you pay shift differentials (nights, weekends) or on-call and call-back pay?",
+          "why": "Differentials are not built in yet; a flat on-call amount is a stipend; call-back time is hours worked.",
+          "maps_to": "stipends[]; adjustments; intake_notes"
+        },
+        {
+          "id": "clinics.5",
+          "q": "For home visits: is drive time between patients paid? Is mileage reimbursed?",
+          "why": "Drive time between visits is usually hours worked; mileage is an adjustment.",
+          "maps_to": "time_pay[category=travel]; adjustments"
+        },
+        {
+          "id": "clinics.6",
+          "q": "Are any providers contractors or paid through their own professional corporation?",
+          "why": "They stay outside this payroll.",
+          "maps_to": "intake_notes"
+        }
+      ]
+    },
+    {
+      "id": "pack_salon_spa",
+      "title": "Salons, spas, massage and wellness",
+      "intro": "The questions that catch most spa payroll mistakes.",
+      "industries": [
+        "healthcare",
+        "retail"
+      ],
+      "questions": [
+        {
+          "id": "salon_spa.1",
+          "q": "Do service providers clock in for the whole shift, or only for services? Is lobby time recorded in the booking system or the time clock?",
+          "why": "Decides where hours worked come from for overtime and the minimum-wage check, and which report holds lobby time.",
+          "maps_to": "roles[].hours_worked_source; time_entries"
+        },
+        {
+          "id": "salon_spa.2",
+          "q": "Is there a cap on paid lobby hours per month? Who approves going over it?",
+          "why": "A cap that lives only in someone's head gets paid inconsistently.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "salon_spa.3",
+          "q": "Do any providers do two kinds of services (massage and skin care, hair and nails)? How does the booking system tell their services apart?",
+          "why": "Dual-role providers are paid at a different rate per role; the service code decides which.",
+          "maps_to": "employee_overrides[].secondary_role; roles[].service_categories"
+        },
+        {
+          "id": "salon_spa.4",
+          "q": "Are membership commissions paid monthly on the month-end run? Does the membership report include renewals and transfers?",
+          "why": "Renewals and transfers often should not pay; a monthly incentive paid every period doubles it.",
+          "maps_to": "incentives (memberships).frequency, exclude"
+        },
+        {
+          "id": "salon_spa.5",
+          "q": "Do you run seasonal gift card promotions with commission (holidays, Mother's Day)? On exactly which dates?",
+          "why": "Sales outside the window must not pay; the dates go into each period.",
+          "maps_to": "period.json windows"
+        },
+        {
+          "id": "salon_spa.6",
+          "q": "Does a franchisor or brand scorecard drive manager bonuses? Which numbers and which dates?",
+          "why": "Bonus metrics must come from the same report every month.",
+          "maps_to": "bonus_pools[].metrics; location_metrics.csv"
+        }
+      ]
+    },
+    {
+      "id": "pack_fitness",
+      "title": "Fitness and yoga studios",
+      "intro": "Class pay, personal training and cancellations.",
+      "industries": [
+        "healthcare",
+        "entertainment"
+      ],
+      "questions": [
+        {
+          "id": "fitness.1",
+          "q": "How are instructors paid per class: a flat rate per class, a rate by class length, or a base plus an amount per attendee?",
+          "why": "A flat rate per class is per-service pay; an amount per attendee is mapped as add-on units.",
+          "maps_to": "roles[].pay_basis = piece_per_service; incentives (addons)"
+        },
+        {
+          "id": "fitness.2",
+          "q": "Is there a minimum per class when few people show up, or pay for a class that is cancelled?",
+          "why": "These are easy to miss in a class report.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "fitness.3",
+          "q": "How are personal trainers paid per session: a flat rate, a percent of the session price, or tiers by sessions per month?",
+          "why": "Decides the pay basis and any tiers.",
+          "maps_to": "roles[].pay_basis; incentives[].tiers"
+        },
+        {
+          "id": "fitness.4",
+          "q": "What happens to pay for no-shows and late cancellations?",
+          "why": "The class or session report must show them the way you pay them.",
+          "maps_to": "services rows; adjustments"
+        },
+        {
+          "id": "fitness.5",
+          "q": "Do instructors or trainers earn commission on memberships, packages or personal-training sales?",
+          "why": "Each becomes a sales incentive.",
+          "maps_to": "incentives (sales)"
+        },
+        {
+          "id": "fitness.6",
+          "q": "Are any instructors contractors (1099)?",
+          "why": "Contractors are outside this payroll and must not appear in it.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "fitness.7",
+          "q": "Is time for subbing, instructor training or required meetings paid? At what rate?",
+          "why": "Time outside classes still counts for overtime and minimum wage.",
+          "maps_to": "time_pay[]"
+        }
+      ]
+    },
+    {
+      "id": "pack_manufacturing",
+      "title": "Manufacturing & Industrial",
+      "intro": "Production pay, shifts and pre-shift time.",
+      "industries": [
+        "manufacturing"
+      ],
+      "questions": [
+        {
+          "id": "manufacturing.1",
+          "q": "Is anyone paid per unit or piece produced? Which report counts units per person per day?",
+          "why": "Per-unit pay is per-service pay with units as the quantity; every week must still clear minimum wage.",
+          "maps_to": "roles[].pay_basis = piece_per_service; services"
+        },
+        {
+          "id": "manufacturing.2",
+          "q": "Do you run more than one shift? Do night or weekend shifts pay more?",
+          "why": "Shift differentials are not built in yet; they are entered as adjustments until they are.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "manufacturing.3",
+          "q": "Do you pay production, safety or attendance bonuses? Are they promised in advance?",
+          "why": "Promised bonuses raise the overtime rate for the weeks they cover.",
+          "maps_to": "bonus_pools[]; adjustments include_in_regular_rate"
+        },
+        {
+          "id": "manufacturing.4",
+          "q": "Is time for pre-shift meetings, putting on protective gear or cleanup recorded and paid?",
+          "why": "That time is usually hours worked; leaving it out is a common wage claim.",
+          "maps_to": "time_pay[]"
+        },
+        {
+          "id": "manufacturing.5",
+          "q": "Do you use temp agency workers?",
+          "why": "The agency pays them; they stay out of this payroll.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "manufacturing.6",
+          "q": "Are any workers covered by a union agreement?",
+          "why": "Union scales and fringe are not computed.",
+          "maps_to": "intake_notes"
+        }
+      ]
+    },
+    {
+      "id": "pack_financial_services",
+      "title": "Financial Services",
+      "intro": "Production commission, chargebacks and draws.",
+      "industries": [
+        "financial_services"
+      ],
+      "questions": [
+        {
+          "id": "financial_services.1",
+          "q": "How are producers, agents or loan officers paid: salary, commission on premium, loans or fees, or salary plus commission?",
+          "why": "Decides each role's pay basis and the commission incentives.",
+          "maps_to": "roles[]; incentives (sales)"
+        },
+        {
+          "id": "financial_services.2",
+          "q": "Do commissions come back out if a policy cancels or a loan does not fund? Within what time?",
+          "why": "Chargebacks are refund rows; ones older than the window are entered as adjustments.",
+          "maps_to": "sales refund rows; adjustments"
+        },
+        {
+          "id": "financial_services.3",
+          "q": "Do you pay a draw against commission?",
+          "why": "Draws are not computed; they are entered and repaid as adjustments.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "financial_services.4",
+          "q": "Do seasonal staff (for example in tax season) work overtime? Are they hourly?",
+          "why": "Seasonal overtime is the usual surprise.",
+          "maps_to": "roles[]; overtime"
+        },
+        {
+          "id": "financial_services.5",
+          "q": "Which roles are exempt? Has each been checked against the salary threshold where the person works?",
+          "why": "The engine pays overtime only to non-exempt roles.",
+          "maps_to": "roles[].exempt"
+        },
+        {
+          "id": "financial_services.6",
+          "q": "Are bonuses tied to production or referrals and promised in advance?",
+          "why": "Promised bonuses raise the overtime rate.",
+          "maps_to": "incentives; bonus_pools[]"
+        }
+      ]
+    },
+    {
+      "id": "pack_energy_utilities",
+      "title": "Energy & Utilities",
+      "intro": "Field crews, standby pay and travel.",
+      "industries": [
+        "energy_utilities"
+      ],
+      "questions": [
+        {
+          "id": "energy_utilities.1",
+          "q": "Are field crews paid hourly? Is travel to and between job sites paid?",
+          "why": "Travel between sites is usually hours worked.",
+          "maps_to": "time_pay[category=travel]"
+        },
+        {
+          "id": "energy_utilities.2",
+          "q": "Do you pay standby, on-call or call-out pay? How much, and how is it recorded?",
+          "why": "A flat standby amount is a stipend or a fixed-rate time category; call-out time worked is hours worked.",
+          "maps_to": "stipends[]; time_pay[basis=fixed]"
+        },
+        {
+          "id": "energy_utilities.3",
+          "q": "Do you pay per diem or lodging when crews travel?",
+          "why": "Per diem is entered as an adjustment; your payroll provider decides its tax treatment.",
+          "maps_to": "adjustments"
+        },
+        {
+          "id": "energy_utilities.4",
+          "q": "Do night, weekend or hazard shifts pay more?",
+          "why": "Differentials are not built in yet; they are entered as adjustments.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "energy_utilities.5",
+          "q": "Is any work on public projects that require prevailing wage or certified payroll?",
+          "why": "Prevailing wage and certified payroll reports are not supported.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "energy_utilities.6",
+          "q": "Do crews work 10- or 12-hour days, or in states with daily overtime?",
+          "why": "Daily overtime and double time come from the state rules.",
+          "maps_to": "state_rules[].daily_ot"
+        }
+      ]
+    },
+    {
+      "id": "pack_home_services",
+      "title": "Field service and home service trades",
+      "intro": "Drive time and per-job pay are where crews get shorted.",
+      "industries": [
+        "energy_utilities"
+      ],
+      "questions": [
+        {
+          "id": "home_services.1",
+          "q": "How are technicians or crew paid: hourly, per job, a percent of the job price, or hourly plus a job bonus?",
+          "why": "Decides each role's pay basis.",
+          "maps_to": "roles[].pay_basis"
+        },
+        {
+          "id": "home_services.2",
+          "q": "Is drive time between jobs paid? What about the trip to the first job and home from the last?",
+          "why": "Drive time between jobs is usually hours worked; it counts for overtime and minimum wage.",
+          "maps_to": "time_pay[category=travel]"
+        },
+        {
+          "id": "home_services.3",
+          "q": "For team jobs, how is one job's pay split among the crew?",
+          "why": "The engine pays each job row to one person; a split must arrive as one row per person.",
+          "maps_to": "services mapping"
+        },
+        {
+          "id": "home_services.4",
+          "q": "Do techs earn spiffs or commission on upsells, service agreements or memberships they sell?",
+          "why": "Each becomes an incentive.",
+          "maps_to": "incentives"
+        },
+        {
+          "id": "home_services.5",
+          "q": "Are callbacks or rework paid, unpaid, or charged back? (Check your state before docking pay.)",
+          "why": "Unpaid rework must be removed in the export or entered as an adjustment.",
+          "maps_to": "adjustments; intake_notes"
+        },
+        {
+          "id": "home_services.6",
+          "q": "How are mileage, tools, uniforms and on-call time handled?",
+          "why": "Reimbursements are one-off adjustments; paid on-call time is time pay.",
+          "maps_to": "adjustments; time_pay[]"
+        },
+        {
+          "id": "home_services.7",
+          "q": "Where does job data come from (a job-management app, a spreadsheet)? Does it total hours and revenue per tech?",
+          "why": "Report totals are checked every period.",
+          "maps_to": "systems.pos_reports; period.json sources"
+        }
+      ]
+    },
+    {
+      "id": "pack_retail",
+      "title": "Retail stores",
+      "intro": "Commission base, returns and spiffs are where retail payroll goes wrong.",
+      "industries": [
+        "retail"
+      ],
+      "questions": [
+        {
+          "id": "retail.1",
+          "q": "Is commission figured on gross sales, or net of returns, discounts and employee purchases?",
+          "why": "Decides which sales rows count and which are excluded.",
+          "maps_to": "incentives[].exclude; sales mapping"
+        },
+        {
+          "id": "retail.2",
+          "q": "When an item is returned, does commission come back out? Within how many days, and from a later paycheck if the sale was already paid?",
+          "why": "Returns are refund rows that reduce commission; a return bigger than the period's sales is flagged, never silently ignored.",
+          "maps_to": "sales refund rows; adjustments"
+        },
+        {
+          "id": "retail.3",
+          "q": "When two associates help one customer, how is the sale split, and does the POS record the split?",
+          "why": "The engine pays each sales row to one person; a split must arrive as two rows.",
+          "maps_to": "sales mapping"
+        },
+        {
+          "id": "retail.4",
+          "q": "Which spiffs do you pay (protection plans, store card sign-ups, loyalty sign-ups, featured products)? A flat amount each, or a percent?",
+          "why": "Each spiff is its own incentive with its own rate and eligible roles.",
+          "maps_to": "incentives[kind=per_unit]"
+        },
+        {
+          "id": "retail.5",
+          "q": "Are store managers bonused on sales against target, shrink, payroll percent or audit scores? Where do those numbers come from each month?",
+          "why": "Bonus pools pay on numbers from a monthly report, checked against a threshold.",
+          "maps_to": "bonus_pools[].metrics; location_metrics.csv"
+        },
+        {
+          "id": "retail.6",
+          "q": "Do you pay a draw against commission (an advance repaid from later commission)?",
+          "why": "Draws are not computed by the engine; they are entered and repaid as one-off adjustments, so the owner must know that up front.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "retail.7",
+          "q": "Do seasonal or temporary staff have different rates or commission plans?",
+          "why": "A different plan needs its own role or employee override.",
+          "maps_to": "roles[]; employee_overrides[]"
+        },
+        {
+          "id": "retail.8",
+          "q": "Do associates pick up shifts at other stores? Are those stores under the same legal company?",
+          "why": "Hours at stores of the same employer add up for overtime.",
+          "maps_to": "employers[]; company.ot_aggregation"
+        }
+      ]
+    },
+    {
+      "id": "pack_food_beverage",
+      "title": "Cafes and counter-service food",
+      "intro": "Tips and break rules carry most of the risk here.",
+      "industries": [
+        "retail",
+        "entertainment"
+      ],
+      "questions": [
+        {
+          "id": "food_beverage.1",
+          "q": "Do you pay tipped staff below the full minimum wage (a tip credit)?",
+          "why": "This tool does not support a tip credit: every hour is held to the full minimum wage. If you take one, it is not a fit yet.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "food_beverage.2",
+          "q": "Do you pool tips? Who is in the pool, on what formula (hours, points, a percent of sales), and who figures each share today?",
+          "why": "The engine pays the tips the export credits to each person; pool shares must be worked out before mapping.",
+          "maps_to": "tips mapping; intake_notes"
+        },
+        {
+          "id": "food_beverage.3",
+          "q": "Do you add an automatic service charge? Is any of it paid to staff, and how?",
+          "why": "Service charges are not tips and are often taxed and paid differently.",
+          "maps_to": "adjustments; intake_notes"
+        },
+        {
+          "id": "food_beverage.4",
+          "q": "Do your states or cities require meal or rest break premiums, split-shift pay or predictive-scheduling pay? Who tracks them today?",
+          "why": "These are not computed; they must be entered as adjustments so they are not forgotten.",
+          "maps_to": "intake_notes; adjustments"
+        },
+        {
+          "id": "food_beverage.5",
+          "q": "Do some people work two roles at different rates (barista and baker, counter and kitchen)?",
+          "why": "Each role's hours need their own rate.",
+          "maps_to": "employee_overrides[].secondary_role"
+        }
+      ]
+    },
+    {
+      "id": "pack_auto_services",
+      "title": "Auto repair, detailing and tire shops",
+      "intro": "Flat-rate pay and the minimum-wage floor.",
+      "industries": [
+        "retail",
+        "manufacturing"
+      ],
+      "questions": [
+        {
+          "id": "auto_services.1",
+          "q": "Are technicians paid flat rate (per flagged or book hour), hourly, or a mix? Which report shows flagged hours per tech?",
+          "why": "Flagged hours are the service hours for flat-rate techs.",
+          "maps_to": "roles[].pay_basis = piece_service_hour; services"
+        },
+        {
+          "id": "auto_services.2",
+          "q": "Do flat-rate techs clock in for the whole shift?",
+          "why": "Every clocked hour must earn at least minimum wage each week; the engine checks it.",
+          "maps_to": "roles[].hours_worked_source = clock"
+        },
+        {
+          "id": "auto_services.3",
+          "q": "How are service advisors paid: commission on labor, parts, or both? A percent or tiers?",
+          "why": "Each becomes an incentive on service revenue or sales.",
+          "maps_to": "incentives (services, sales)"
+        },
+        {
+          "id": "auto_services.4",
+          "q": "Are comebacks or warranty rework paid? At what rate?",
+          "why": "Unpaid rework must be removed in the export or entered as an adjustment.",
+          "maps_to": "services mapping; adjustments"
+        },
+        {
+          "id": "auto_services.5",
+          "q": "Do you pay spiffs on add-on services (alignments, fluid services, tires) or on product sales?",
+          "why": "Each spiff code needs a rate, even if it is zero.",
+          "maps_to": "incentives (addons, sales)"
+        },
+        {
+          "id": "auto_services.6",
+          "q": "Are tool allowances or certification bonuses paid through payroll?",
+          "why": "Allowances are stipends; one-time bonuses are adjustments.",
+          "maps_to": "stipends[]; adjustments"
+        }
+      ]
+    },
+    {
+      "id": "pack_education",
+      "title": "Education",
+      "intro": "Sessions, stipends and the school year.",
+      "industries": [
+        "education"
+      ],
+      "questions": [
+        {
+          "id": "education.1",
+          "q": "Are tutors or instructors paid per session or lesson, hourly, or salary?",
+          "why": "Per-session pay is per-service pay.",
+          "maps_to": "roles[].pay_basis"
+        },
+        {
+          "id": "education.2",
+          "q": "Are salaried teachers paid over 12 months for a 10-month year?",
+          "why": "Spreading pay over the summer is not computed; the payroll system has to hold that schedule.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "education.3",
+          "q": "Do you pay stipends for extra duties (coaching, clubs, lead teacher)? From when to when?",
+          "why": "Stipends are paid between their start and end dates.",
+          "maps_to": "stipends[]"
+        },
+        {
+          "id": "education.4",
+          "q": "Is prep, grading or parent-meeting time paid for hourly or per-session staff?",
+          "why": "That time counts for overtime and minimum wage.",
+          "maps_to": "time_pay[]"
+        },
+        {
+          "id": "education.5",
+          "q": "Are substitutes paid a daily rate or hourly?",
+          "why": "A daily rate works as a per-service rate.",
+          "maps_to": "roles[].pay_basis"
+        },
+        {
+          "id": "education.6",
+          "q": "For childcare: do split shifts or ratio coverage create overtime or split-shift pay?",
+          "why": "Split-shift premiums are not computed.",
+          "maps_to": "intake_notes"
+        }
+      ]
+    },
+    {
+      "id": "pack_government",
+      "title": "Government & Defense",
+      "intro": "Know the limits first.",
+      "industries": [
+        "government"
+      ],
+      "questions": [
+        {
+          "id": "government.1",
+          "q": "Is any work on contracts covered by prevailing wage (Davis-Bacon) or the Service Contract Act?",
+          "why": "Prevailing-wage rates, fringe and certified payroll reports are not supported. If most of the payroll is covered work, this tool is not a fit yet.",
+          "maps_to": "intake_notes"
+        },
+        {
+          "id": "government.2",
+          "q": "Do you need labor hours by contract or charge code for billing?",
+          "why": "Hours are tracked by location (cost center), not by contract; contract labor reports are not produced.",
+          "maps_to": "locations[].payroll_code; intake_notes"
+        },
+        {
+          "id": "government.3",
+          "q": "Which roles are exempt? Do non-exempt staff ever work unrecorded hours on contracts?",
+          "why": "The engine pays overtime only on recorded hours of non-exempt roles.",
+          "maps_to": "roles[].exempt"
+        },
+        {
+          "id": "government.4",
+          "q": "Do people work on government sites or in several states?",
+          "why": "Minimum wage and overtime follow where the work is done.",
+          "maps_to": "locations[]; state_rules[]"
+        },
+        {
+          "id": "government.5",
+          "q": "Do you pay clearance, hazard or shift premiums?",
+          "why": "These are not built in yet; they are entered as adjustments.",
+          "maps_to": "intake_notes; adjustments"
+        }
+      ]
+    },
+    {
+      "id": "outputs",
+      "title": "What you hand to the payroll system",
+      "questions": [
+        {
+          "id": "outputs.1",
+          "q": "Can you download your payroll system's import template (hours and/or extra pay)? Please share the header row.",
+          "why": "Every connector profile is a starting point; your own template is the truth.",
+          "maps_to": "connectors/<profile>.json"
+        },
+        {
+          "id": "outputs.2",
+          "q": "Does your payroll system pay hours at the rate it has on file, or do you send the rate?",
+          "why": "If someone's rate changed mid-period, one rate on file cannot pay both; the run warns.",
+          "maps_to": "profile include_rate"
+        },
+        {
+          "id": "outputs.3",
+          "q": "Should the file be split by location or department?",
+          "why": "Location codes are added to each line when you need them.",
+          "maps_to": "payroll_settings.split_by_location"
+        },
+        {
+          "id": "outputs.4",
+          "q": "Any company code, batch ID or file naming rule the upload needs?",
+          "why": "Some systems (ADP paydata) reject a file with the wrong name or batch.",
+          "maps_to": "payroll_settings.co_code, batch_suffix"
+        }
+      ]
+    }
+  ],
+  "industries": [
+    {
+      "id": "technology",
+      "label": "Technology & Software",
+      "examples": "software and SaaS companies, IT services and managed service providers, agencies, startups",
+      "fit": "Salaried staff, hourly support and QA with overtime, sales commission per deal or as a percent, promised bonuses that raise the overtime rate, on-call stipends, staff in several states.",
+      "gaps": [
+        "Commission accelerators that change the rate once a quota is reached are not computed; enter them as adjustments.",
+        "Equity, expense reimbursements and quarterly or annual commissions are entered as adjustments."
+      ]
+    },
+    {
+      "id": "entertainment",
+      "label": "Entertainment",
+      "examples": "venues and theaters, event companies, family entertainment centers, bowling, cinemas, escape rooms, recreation",
+      "fit": "Hourly event and venue staff, tips and event gratuities paid through payroll, flat day rates, spiffs on tickets, parties and memberships, staff across several venues.",
+      "gaps": [
+        "Minimum-call guarantees, union scales, fringe and meal penalties are not computed.",
+        "Tip pools are not computed: the engine pays the tips the export credits to each person."
+      ]
+    },
+    {
+      "id": "healthcare",
+      "label": "Healthcare & Life Sciences",
+      "examples": "massage, spa and wellness clinics, med spas, chiropractic, physical therapy, dental, home health, fitness and yoga studios",
+      "fit": "Where this tool started: per-hour, per-visit and production (percent of revenue) pay, lobby and training time, add-on and service spiffs, membership and retail commissions, tips, dual-role providers, drive time for home visits.",
+      "gaps": [
+        "Shift differentials (nights, weekends) are not built in yet; enter them as adjustments.",
+        "A guaranteed minimum against production is not computed; enter the top-up as an adjustment.",
+        "Contractors and providers paid through their own professional corporation stay outside this payroll."
+      ]
+    },
+    {
+      "id": "manufacturing",
+      "label": "Manufacturing & Industrial",
+      "examples": "small manufacturers, food and beverage production, print shops, machine and fabrication shops, woodworking, auto repair",
+      "fit": "Hourly crews with weekly and daily overtime, pay per unit produced or per flagged hour with a minimum-wage check every week, production and attendance bonuses that raise the overtime rate, crews across plants of the same company.",
+      "gaps": [
+        "Shift differentials are not built in yet; enter them as adjustments.",
+        "Union scales and fringe are not computed."
+      ]
+    },
+    {
+      "id": "financial_services",
+      "label": "Financial Services",
+      "examples": "insurance agencies, mortgage and lending offices, tax preparation, accounting and bookkeeping firms, financial advisors",
+      "fit": "Salaried and hourly staff, commission on premium, loans or fees, chargebacks that come back out of commission, seasonal overtime, production bonuses.",
+      "gaps": [
+        "A draw against commission is not computed; enter draws and repayments as adjustments.",
+        "Chargebacks older than the commission window are entered as adjustments."
+      ]
+    },
+    {
+      "id": "energy_utilities",
+      "label": "Energy & Utilities",
+      "examples": "solar and electrical contractors, HVAC, plumbing, propane and fuel delivery, small utilities, field service and home service trades",
+      "fit": "Hourly field crews, paid drive time between job sites, per-job pay or a percent of the job price, standby and on-call pay, daily overtime states, upsell and service-agreement spiffs.",
+      "gaps": [
+        "Prevailing wage and certified payroll reports are not supported.",
+        "Shift and hazard differentials are not built in yet; per diem and mileage are entered as adjustments."
+      ]
+    },
+    {
+      "id": "retail",
+      "label": "Retail",
+      "examples": "stores, salons and personal services, cafes and counter-service food, automotive service, pet care",
+      "fit": "Hourly staff with sales commission and spiffs, returns that claw back commission, card tips, overtime across stores of the same company, store managers on salary with sales and shrink bonuses.",
+      "gaps": [
+        "A draw against commission is not computed; enter it as an adjustment.",
+        "No tip credit: every hour is held to the full minimum wage, so full-service restaurants and bars are not a fit yet.",
+        "Tip pools are not computed: work out pool shares before mapping."
+      ]
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "examples": "private schools, tutoring and test-prep centers, childcare and preschools, music, art and driving schools",
+      "fit": "Per-session or per-lesson pay, hourly aides and staff, salaried teachers, extra-duty stipends with start and end dates, paid prep and meeting time.",
+      "gaps": [
+        "Spreading a 10-month salary over 12 months is not computed; the payroll system has to hold that schedule.",
+        "Split-shift premiums are not computed."
+      ]
+    },
+    {
+      "id": "government",
+      "label": "Government & Defense",
+      "examples": "small government contractors and defense subcontractors, public-sector service providers",
+      "fit": "Ordinary hourly and salaried payroll with overtime and time off, by location.",
+      "gaps": [
+        "Prevailing wage (Davis-Bacon, Service Contract Act), fringe benefits and certified payroll reports are not supported. If most of the payroll is covered contract work, this tool is not a fit yet.",
+        "Hours are tracked by location, not by contract or charge code."
+      ]
+    },
+    {
+      "id": "other",
+      "label": "Something else",
+      "examples": "any business with hourly, salaried, commissioned, tipped or piece-rate staff",
+      "fit": "Work through the core questions; anything that does not fit is written down in the owner's words and raised before setup is finished.",
+      "gaps": []
+    }
+  ],
+  "pay_models": [
+    {
+      "id": "hourly",
+      "label": "Hourly"
+    },
+    {
+      "id": "salary",
+      "label": "Salary"
+    },
+    {
+      "id": "piece",
+      "label": "Per service, job, class or unit (piece rate)"
+    },
+    {
+      "id": "commission",
+      "label": "Commission or spiffs"
+    },
+    {
+      "id": "tips",
+      "label": "Tips"
+    }
+  ]
+}

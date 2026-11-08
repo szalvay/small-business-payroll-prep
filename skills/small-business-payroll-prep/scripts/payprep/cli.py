@@ -186,7 +186,11 @@ def cmd_profiles(a):
 def cmd_intake_workbook(a):
     from .intake import build_intake_workbook
     cfg = load_config(a.from_config) if a.from_config else None
-    path = build_intake_workbook(a.output, cfg)
+    try:
+        path = build_intake_workbook(a.output, cfg, a.industry)
+    except ValueError as e:
+        print(e)
+        return 1
     print(f"wrote {path}")
     return 0
 
@@ -208,21 +212,27 @@ def cmd_compile_intake(a):
 
 
 def cmd_sample(a):
-    from .sample import build_sample
     dest = Path(a.destination)
     if dest.exists() and any(dest.iterdir()):
         print(f"{dest} is not empty")
         return 1
-    build_sample(dest)
-    print(f"built the sample spa workspace in {dest}. Next, as in references/getting-started.md:\n"
+    if a.kind == "retail":
+        from .sample_retail import build_retail_sample
+        build_retail_sample(dest)
+        roster, time_off, what = "adp_worker_export.csv", "adp_time_off.csv", "the sample retail workspace (three stores, two states)"
+    else:
+        from .sample import build_sample
+        build_sample(dest)
+        roster, time_off, what = "bamboohr_roster_export.csv", "bamboohr_time_off_used.csv", "the sample spa workspace (three locations, two states)"
+    print(f"built {what} in {dest}. Next, as in references/getting-started.md:\n"
           f"  approve {dest} --by \"Your Name\"\n"
-          f"  then for each folder in {dest}/periods, oldest first: hris-import <period> --roster <period>/raw/bamboohr_roster_export.csv "
-          f"--time-off <period>/raw/bamboohr_time_off_used.csv, then run <period>")
+          f"  then for each folder in {dest}/periods, oldest first: hris-import <period> --roster <period>/raw/{roster} "
+          f"--time-off <period>/raw/{time_off}, then run <period>")
     return 0
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(prog="payroll.py", description="Salon & Spa Payroll Prep: rules in, checked payroll out.")
+    p = argparse.ArgumentParser(prog="payroll.py", description="Payroll Prep for Small Businesses: rules in, checked payroll out.")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("init", help="start a workspace with a starter config")
@@ -253,12 +263,16 @@ def main(argv=None):
     s = sub.add_parser("profiles", help="list HRIS / payroll connector profiles")
     s.add_argument("workspace", nargs="?"); s.set_defaults(fn=cmd_profiles)
     s = sub.add_parser("intake-workbook", help="write the fillable intake workbook (blank or pre-filled from a config)")
-    s.add_argument("output"); s.add_argument("--from-config"); s.set_defaults(fn=cmd_intake_workbook)
+    s.add_argument("output"); s.add_argument("--from-config")
+    s.add_argument("--industry", help="only the questions for this industry (technology, entertainment, healthcare, manufacturing, financial_services, energy_utilities, retail, education, government, other)")
+    s.set_defaults(fn=cmd_intake_workbook)
     s = sub.add_parser("compile-intake", help="turn a filled intake workbook into payroll_config.json")
     s.add_argument("workbook"); s.add_argument("output"); s.add_argument("--force", action="store_true")
     s.set_defaults(fn=cmd_compile_intake)
-    s = sub.add_parser("sample", help="copy the sample spa workspace to try everything end to end")
-    s.add_argument("destination"); s.set_defaults(fn=cmd_sample)
+    s = sub.add_parser("sample", help="build a made-up sample business to try everything end to end")
+    s.add_argument("destination")
+    s.add_argument("--kind", choices=["spa", "retail"], default="spa", help="spa (piece rate, add-ons, memberships) or retail (hourly, sales commission, daily overtime)")
+    s.set_defaults(fn=cmd_sample)
     a = p.parse_args(argv)
     try:
         return a.fn(a)

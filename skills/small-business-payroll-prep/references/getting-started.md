@@ -1,6 +1,15 @@
-# Getting started with the sample spa
+# Getting started with the samples
 
-The sample is Willowbrook Spa Co., a made-up business with three locations in two
+There are two made-up businesses to try. Both are fictional, every name, rate and
+minimum wage in them is an example, and each builds on demand:
+
+- `payroll.py sample ./demo` builds a **spa** (piece rate, add-ons, memberships, tips).
+- `payroll.py sample ./store --kind retail` builds a **retail chain** (hourly staff,
+  sales commission, returns, California daily overtime). See "The retail sample" below.
+
+## The spa sample
+
+The spa sample is Willowbrook Spa Co., a made-up business with three locations in two
 states, sixteen people and two October 2026 pay periods. Every name, rate and minimum
 wage in it is fictional. It exercises the hard cases: a dual-role provider, a raise in
 the middle of a period, a new hire and a departure, front desk overtime across two
@@ -54,11 +63,42 @@ Then try breaking it. Each of these should stop the run or turn it NOT CLEAR:
 - Change any rate in `payroll_config.json` without approving again.
 - Remove the `acknowledged_warnings` entry from the second period.
 
+## The retail sample
+
+Harbor & Pine Outfitters is a made-up outdoor retailer with two Oregon stores under one
+company and a California store under another, thirteen people and two biweekly pay
+periods that line up with its Monday-to-Sunday workweeks. Its HR exports are in the ADP
+Workforce Now layout and its upload file is an ADP paydata batch.
+
+```bash
+python3 $P sample ./store --kind retail
+python3 $P approve ./store --by "Your Name"
+for p in 2026-10-05_2026-10-18 2026-10-19_2026-11-01; do
+  python3 $P hris-import store/periods/$p \
+    --roster store/periods/$p/raw/adp_worker_export.csv \
+    --time-off store/periods/$p/raw/adp_time_off.csv
+  python3 $P run store/periods/$p
+done
+```
+
+What to look at in the review workbooks:
+
+- **Overtime:** Nina Ford's week of October 12 (44 hours across two stores of the same
+  company), Ana Torres's 10-hour Saturday and 13-hour inventory night in Sacramento
+  (daily overtime and double time), Ravi Menon working seven days in a row, and Priya
+  Shah's overtime paid on a regular rate raised by her commission.
+- **Earnings Lines:** commission by category (footwear 3%, apparel 2%, equipment 1%), a
+  returned pair of boots coming back out of Omar Haddad's commission, protection-plan
+  spiffs, and the tiered loyalty sign-up bonus on the month-end run.
+- **Incentive Notes:** Tessa Quinn's employee purchase, excluded from commission.
+- **Bonus pools** (month-end run): each store's bonus on sales against target and shrink.
+- `EPIHPX01.csv`: the ADP paydata batch.
+
 ## Starting a real workspace
 
 ```bash
-python3 $P init ./my-spa --name "My Spa"
-python3 $P intake-workbook ./my-spa/intake.xlsx      # or do the interview with Claude
+python3 $P init ./my-business --name "My Business"
+python3 $P intake-workbook ./my-business/intake.xlsx --industry retail   # or do the interview with Claude
 ```
 
 Then follow SKILL.md: intake, validate, rulebook, approve, then one folder per pay

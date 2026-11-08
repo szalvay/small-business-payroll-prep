@@ -2,6 +2,7 @@
   "schema_version": "1.0",
   "company": {
     "name": "",
+    "industry": "",
     "pay_frequency": "semi_monthly",
     "workweek_start": "sunday",
     "ot_aggregation": "employer",

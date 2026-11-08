@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.1.0 (2026-11)
+
+Now for small businesses in general, not only salons and spas.
+
+- Renamed to Payroll Prep for Small Businesses (`small-business-payroll-prep`); the
+  engine package is now `payprep`.
+- Intake by industry, following nine industries: Technology & Software, Entertainment,
+  Healthcare & Life Sciences, Manufacturing & Industrial, Financial Services, Energy &
+  Utilities, Retail, Education, Government & Defense, plus "something else". Each has a
+  question pack and an honest list of what it needs that is not built yet. Core sections
+  are asked by how people are paid (hourly, salary, piece rate, commission, tips).
+  175 questions in all; `intake-workbook --industry <id>` shows only what applies, and
+  `company.industry` records the choice.
+- A second sample business: a three-store retailer with hourly staff, sales commission
+  with returns and employee-purchase exclusions, a per-unit spiff, a tiered monthly
+  loyalty bonus, coffee-bar tips, overtime across two stores, California daily overtime,
+  double time and the seventh day, ADP exports and an ADP paydata upload
+  (`payroll.py sample <dir> --kind retail`).
+- Intake workbook examples are industry-neutral.
+- README rewritten for owners with no payroll experience, with on-brand diagrams of how
+  it fits with existing systems and how a pay period runs, plain-language install steps
+  and a glossary.
+- 43 engine tests.
+
 ## 1.0.0 (2026-11)
 
 First public release.

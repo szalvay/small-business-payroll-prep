@@ -26,13 +26,14 @@ YESNO = ["yes", "no"]
 DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
 SYSTEMS = ["bamboohr", "adp_wfn", "paylocity", "hibob", "gusto", "generic", "other"]
 INPUTS = ["services", "addons", "sales", "tips", "time_entries", "time_off", "location_metrics"]
+QUESTIONS_FILE = Path(__file__).resolve().parents[2] / "assets" / "intake" / "questions.json"
 
 # (tab, intro, columns[(header, key, kind, choices, help)], example row)
 TABLES = [
     ("Employers", "Each legal entity that issues paychecks. Locations owned by the same entity share overtime.",
      [("Employer ID", "id", "str", None, "Short code, e.g. E1"), ("Legal name", "legal_name", "str", None, ""),
       ("Notes", "notes", "str", None, "")],
-     ["E1", "Willowbrook Spa LLC", ""]),
+     ["E1", "Example Co. LLC", ""]),
     ("Locations", "Every location that has staff. Minimum wage is per location because cities and counties differ.",
      [("Location ID", "id", "str", None, "Short code used everywhere else"), ("Name", "name", "str", None, ""),
       ("Employer ID", "employer_id", "str", None, "From the Employers tab"), ("City", "city", "str", None, ""),
@@ -41,7 +42,7 @@ TABLES = [
       ("Next effective from", "mw_next_from", "date", None, ""), ("POS names for this location", "pos_labels", "list", None, "How the POS labels it; separate with ;"),
       ("HRIS names for this location", "hris_labels", "list", None, "How the HR system labels it; separate with ;"),
       ("Payroll department / cost center code", "payroll_code", "str", None, "Optional; goes on the payroll file")],
-     ["DT", "Downtown", "E1", "Portland", "OR", 16.30, "2025-07-01", "", "", "Downtown;0101", "Downtown Portland", "100"]),
+     ["MAIN", "Main Street", "E1", "Portland", "OR", 16.30, "2025-07-01", "", "", "Main St;Store 1", "Main Street", "100"]),
     ("State Rules", "Overtime and piece-rate rules per state. Start from the preset, then confirm with your payroll provider or counsel.",
      [("State", "state", "str", None, ""), ("Weekly OT after hours", "weekly_ot_threshold", "num", None, "Usually 40"),
       ("Daily OT after hours", "daily_threshold", "num", None, "Blank if your state has no daily overtime"),
@@ -50,26 +51,26 @@ TABLES = [
       ("Confirmed by owner", "confirmed_by_owner", "bool", YESNO, "Only say yes after checking"), ("Notes", "notes", "str", None, "")],
      ["OR", 40, "", "", "no", "no", "yes", "Confirmed with payroll provider"]),
     ("Roles", "Every kind of job, and how it is paid. Dual-role people get a secondary role on the Employee Notes tab.",
-     [("Role ID", "id", "str", None, "e.g. massage_therapist"), ("Label", "label", "str", None, ""),
+     [("Role ID", "id", "str", None, "e.g. sales_associate"), ("Label", "label", "str", None, ""),
       ("Pay basis", "pay_basis", "str", sorted(PAY_BASES), "How the main pay is figured"),
       ("Exempt from overtime", "exempt", "bool", YESNO, "Only true salaried exempt managers"),
       ("Hours worked come from", "hours_worked_source", "str", sorted(HOURS_SOURCES), "clock = time clock; services_plus_time = service time + recorded non-service time"),
-      ("Service categories", "service_categories", "list", None, "For service roles: massage;stretch or facial"),
+      ("Service categories", "service_categories", "list", None, "Only for roles paid by the service, job or class, e.g. massage;facial or install;repair"),
       ("Receives tips", "tips", "bool", YESNO, ""), ("HRIS job titles", "hris_titles", "list", None, "Exact titles in the HR system; separate with ;")],
-     ["massage_therapist", "Massage Therapist", "piece_service_hour", "no", "services_plus_time", "massage", "yes", "Massage Therapist;LMT"]),
+     ["sales_associate", "Sales Associate", "hourly", "no", "clock", "", "no", "Sales Associate;Associate"]),
     ("Time Pay", "How each kind of non-service or clocked time is paid, per role (* = every role).",
      [("Role ID", "role", "str", None, "* for every role"), ("Kind of time", "category", "str", sorted(TIME_CATEGORIES), ""),
       ("Paid at", "basis", "str", sorted(RATE_BASES), "min_wage, base_rate (their rate), fixed, regular_rate, unpaid"),
       ("Fixed rate", "fixed_rate", "num", None, "Only for 'fixed'"), ("Pay code key", "pay_code", "str", None, "From the Pay Codes tab"),
       ("Notes / limits", "notes", "str", None, "e.g. lobby capped at 4 hours a month")],
-     ["massage_therapist", "lobby", "min_wage", "", "lobby", "Up to 4 hours a month"]),
+     ["*", "training", "base_rate", "", "regular", "Paid at each person's own rate"]),
     ("Time Off", "How sick, PTO and holiday hours are paid, per role (* = every role).",
      [("Role ID", "role", "str", None, ""), ("Type", "type", "str", sorted(TIME_OFF_TYPES), ""),
       ("Paid at", "basis", "str", sorted(RATE_BASES), ""), ("Fixed rate", "fixed_rate", "num", None, ""),
       ("Pay code key", "pay_code", "str", None, "")],
-     ["massage_therapist", "sick", "min_wage", "", "sick"]),
+     ["*", "sick", "base_rate", "", "sick"]),
     ("Incentives", "Commissions, spiffs and bonuses that are counted from sales, services or add-ons.",
-     [("Incentive ID", "id", "str", None, "e.g. addon_spiff"), ("Label", "label", "str", None, ""),
+     [("Incentive ID", "id", "str", None, "e.g. sales_commission"), ("Label", "label", "str", None, ""),
       ("Counted from", "source", "str", sorted(INCENTIVE_SOURCES), "addons, services or sales"),
       ("Kind", "kind", "str", sorted(INCENTIVE_KINDS), "per_unit ($ each) or percent (% of sales)"),
       ("Frequency", "frequency", "str", sorted(FREQUENCIES), "monthly = paid on the month-end run"),
@@ -81,65 +82,68 @@ TABLES = [
       ("Exclude where field", "exclude_field", "str", None, "e.g. item_type"), ("Exclude values", "exclude_values", "list", None, "e.g. renewal;transfer"),
       ("Counts in regular rate", "include_in_regular_rate", "bool", YESNO, "Commissions do; discretionary gifts do not"),
       ("Pay code key", "pay_code", "str", None, ""), ("Notes", "notes", "str", None, "")],
-     ["addon_spiff", "Add-on spiffs", "addons", "per_unit", "pay_period", "massage_therapist;stretch_therapist", "", "none",
-      "employee_location", "seller", "", "", "yes", "enhancements", "Employer rates, never the customer price"]),
-    ("Incentive Rates", "What each incentive pays on. Add-on and service codes match by prefix (CBD matches CBDSCNT).",
+     ["sales_commission", "Sales commission", "sales", "percent", "pay_period", "sales_associate", "", "none",
+      "employee_location", "seller", "item_type", "employee_purchase", "yes", "commission", "Returns come back out"]),
+    ("Incentive Rates", "What each incentive pays on: a product category, an item, or a code (codes match by prefix, so CBD matches CBDSCNT).",
      [("Incentive ID", "incentive", "str", None, ""), ("Match", "match", "str", sorted(MATCH_TYPES), ""),
       ("Value", "value", "str", None, "The code, prefix, category or text"), ("Rate", "rate", "num", None, "$ per unit, or % for percent incentives"),
       ("Only for employee IDs", "only_employees", "list", None, "Blank = everyone eligible")],
-     ["addon_spiff", "code_prefix", "CBD", 10, ""]),
+     ["sales_commission", "category", "footwear", 3, ""]),
     ("Incentive Tiers", "Optional. Tiers for an incentive (units for per_unit, dollars for percent).",
      [("Incentive ID", "incentive", "str", None, ""), ("From", "from", "num", None, ""), ("To", "to", "num", None, "Blank = no top"),
       ("Rate", "rate", "num", None, "")],
-     ["memberships", 1, 5, 10]),
+     ["loyalty", 1, 10, 1]),
     ("Location Recipients", "For incentives with credit = location: who receives what share of each location's total.",
      [("Incentive ID", "incentive", "str", None, ""), ("Location ID", "location_id", "str", None, ""),
       ("Employee ID", "employee_id", "str", None, ""), ("Share", "share", "num", None, "1 = 100%")],
-     ["mgr_gc_override", "DT", "M1", 1]),
+     ["mgr_override", "MAIN", "M1", 1]),
     ("Stipends", "Fixed extra pay per pay period, e.g. covering a second location.",
      [("Stipend ID", "id", "str", None, ""), ("Employee ID", "employee_id", "str", None, ""), ("Label", "label", "str", None, ""),
       ("Amount per pay period", "amount", "num", None, ""), ("Location ID", "location_id", "str", None, "Where the cost lands"),
       ("Effective from", "effective_from", "date", None, ""), ("Effective through", "effective_through", "date", None, ""),
       ("Pay code key", "pay_code", "str", None, "")],
-     ["cover_ec", "M1", "Covering Eastside", 250, "EC", "2026-01-01", "", "stipend"]),
+     ["two_stores", "M1", "Running two locations", 150, "MAIN", "2026-01-01", "", "stipend"]),
     ("Cost Split", "How each salaried manager's cost is split across locations (shares add to 1).",
      [("Employee ID", "employee_id", "str", None, ""), ("Location ID", "location_id", "str", None, ""), ("Share", "share", "num", None, "")],
-     ["M1", "DT", 0.5]),
+     ["M1", "MAIN", 0.5]),
     ("Bonus Pools", "Manager bonuses paid from location scorecard numbers.",
      [("Pool ID", "id", "str", None, ""), ("Label", "label", "str", None, ""), ("Frequency", "frequency", "str", sorted(FREQUENCIES), ""),
       ("Pool per location", "pool_per_location", "num", None, "Most it can pay per location"), ("Pay code key", "pay_code", "str", None, ""),
       ("Counts in regular rate", "include_in_regular_rate", "bool", YESNO, "Yes if any recipient is non-exempt")],
-     ["mgr_bonus", "Manager scorecard bonus", "monthly", 600, "bonus", "no"]),
+     ["store_bonus", "Store manager bonus", "monthly", 500, "bonus", "no"]),
     ("Bonus Metrics", "Each pass/fail target and the share of the pool it unlocks.",
      [("Pool ID", "pool", "str", None, ""), ("Metric ID", "id", "str", None, ""), ("Label", "label", "str", None, ""),
       ("Numerator metric", "numerator", "str", None, "Name used in location_metrics.csv"), ("Denominator metric", "denominator", "str", None, "Blank = just the numerator"),
       ("Compare", "compare", "str", [">=", ">", "<=", "<"], ""), ("Threshold", "threshold", "num", None, "0.14 = 14%"), ("Weight", "weight", "num", None, "0.5 = half the pool")],
-     ["mgr_bonus", "close_rate", "Membership close rate", "memberships_sold", "service_guests", ">=", 0.14, 0.5]),
+     ["store_bonus", "to_target", "Sales to target", "net_sales", "sales_target", ">=", 1, 0.6]),
     ("Bonus Recipients", "Who is paid each location's pool, and in what share.",
      [("Pool ID", "pool", "str", None, ""), ("Location ID", "location_id", "str", None, ""), ("Employee ID", "employee_id", "str", None, ""),
       ("Share", "share", "num", None, "1 = 100%")],
-     ["mgr_bonus", "DT", "M1", 1]),
+     ["store_bonus", "MAIN", "M1", 1]),
     ("Pay Codes", "Every pay type and the exact earning code your payroll system expects. A mismatch fails the upload.",
      [("Pay code key", "key", "str", None, "Used in the other tabs"), ("Label", "label", "str", None, ""),
       ("Payroll system code", "code", "str", None, "Exactly as your payroll system spells it"),
       ("Send as", "export_as", "str", ["hours", "amount", "none"], "none = your payroll system already pays it from its own records")],
-     ["service_wages", "Service pay", "Commission", "amount"]),
+     ["regular", "Regular", "REG", "hours"]),
     ("Employee Notes", "Durable facts about specific people: second role, POS spellings, payroll ID, extra or scheduled rates.",
      [("Employee ID", "employee_id", "str", None, ""), ("Secondary role", "secondary_role", "str", None, ""),
       ("Other POS spellings", "pos_names", "list", None, "e.g. Doe, Jo;JO DOE"), ("Payroll ID / file #", "payroll_id", "str", None, ""),
       ("Home location override", "home_location", "str", None, ""), ("Rate role", "rate_role", "str", None, "For an extra or scheduled rate"),
       ("Rate", "rate", "num", None, ""), ("Rate type", "rate_type", "str", ["hourly", "service_hour", "per_service", "service_pct", "salary_annual", "salary_period"], ""),
       ("Rate effective from", "effective_from", "date", None, "")],
-     ["E107", "esthetician", "Rivera, Sam", "000107", "", "esthetician", 24, "service_hour", ""]),
+     ["E107", "barista", "Doe, Jo", "000107", "", "barista", 17, "hourly", ""]),
     ("POS Reports", "Every report you export each pay period, so Claude can give you an exact checklist.",
      [("Report name", "report", "str", None, "As named in your POS"), ("What it shows", "shows", "str", None, ""),
-      ("Maps to", "maps_to", "str", INPUTS, "Which canonical input it fills"), ("Filters / settings", "filters", "str", None, "e.g. service providers only, sort by provider"),
+      ("Maps to", "maps_to", "str", INPUTS, "Which canonical input it fills"), ("Filters / settings", "filters", "str", None, "e.g. all staff, sorted by person"),
       ("Frequency", "frequency", "str", sorted(FREQUENCIES), ""), ("Gotchas", "gotchas", "str", None, "What has gone wrong with it before")],
-     ["Service detail by provider", "Every service line with service hours", "services", "Pay period dates; all providers", "pay_period",
-      "Quantity and service hours columns sit side by side; do not swap them"]),
+     ["Sales by associate", "Every sale and return by person", "sales", "Pay period dates; all associates; include returns", "pay_period",
+      "Returns are on a second tab of the export; do not miss them"]),
 ]
 
+INDUSTRY_IDS = [i["id"] for i in json.loads(QUESTIONS_FILE.read_text(encoding="utf-8"))["industries"]]
+
 COMPANY_FIELDS = [
+    ("Industry", "industry", "str", INDUSTRY_IDS, "Decides which industry questions apply"),
     ("Company name", "name", "str", None, ""),
     ("Pay frequency", "pay_frequency", "str", sorted(PAY_FREQUENCIES), ""),
     ("Workweek starts on", "workweek_start", "str", DAYS, "The day your 7-day overtime week begins"),
@@ -156,13 +160,34 @@ COMPANY_FIELDS = [
     ("Who submits to the payroll system", "submitter", "str", None, ""),
 ]
 
-QUESTIONS_FILE = Path(__file__).resolve().parents[2] / "assets" / "intake" / "questions.json"
 
 
-def load_questions():
-    """(section title, id, question, why) for every question in the bank."""
-    data = json.loads(QUESTIONS_FILE.read_text(encoding="utf-8"))
-    return [(sec["title"], q["id"], q["q"], q.get("why", "")) for sec in data["sections"] for q in sec["questions"]]
+def load_bank():
+    """The whole question bank: about, industries, pay_models, sections."""
+    return json.loads(QUESTIONS_FILE.read_text(encoding="utf-8"))
+
+
+def industries():
+    return load_bank()["industries"]
+
+
+def industry(industry_id):
+    return next((i for i in industries() if i["id"] == industry_id), None)
+
+
+def load_questions(industry_id=None):
+    """(section title, id, question, why) for every question that applies.
+
+    With an industry, industry packs for other industries are left out; core sections are
+    always included (the owner skips the ones that do not match how they pay people)."""
+    data = load_bank()
+    out = []
+    for sec in data["sections"]:
+        inds = sec.get("industries")
+        if industry_id and inds and industry_id not in inds:
+            continue
+        out += [(sec["title"], q["id"], q["q"], q.get("why", "")) for q in sec["questions"]]
+    return out
 
 
 def _band(ws, hook, label, cols):
@@ -203,11 +228,16 @@ def _write_value(kind, value):
     return value
 
 
-def build_intake_workbook(path, cfg=None):
+def build_intake_workbook(path, cfg=None, industry_id=None):
+    if industry_id is None and cfg:
+        industry_id = cfg.company.get("industry") or None
+    ind = industry(industry_id) if industry_id else None
+    if industry_id and not ind:
+        raise ValueError(f"unknown industry {industry_id!r}; use one of {', '.join(INDUSTRY_IDS)}")
     wb = Workbook()
     ws = wb.active
     ws.title = "Start Here"
-    _band(ws, "Payroll intake", "Salon & Spa Payroll Prep · catch the errors and omissions before payday", 6)
+    _band(ws, "Payroll intake", "Payroll Prep for Small Businesses · catch the errors and omissions before payday", 6)
     intro = [
         "This workbook is your pay rules, written down once. Claude turns it into the settings file and a plain-English Pay Rules Book you sign.",
         "Fill the tabs left to right. Each tab has an example row (grey) above its header; type your answers from row 7 down. Leave tabs you do not need empty.",
@@ -216,6 +246,11 @@ def build_intake_workbook(path, cfg=None):
         "Anything that does not fit a table goes on the Questions tab. Nothing here is legal advice: confirm state rules with your payroll provider or counsel.",
         "No Social Security numbers, bank details or dates of birth belong anywhere in this workbook.",
     ]
+    if ind:
+        intro += [f"Industry: {ind['label']} ({ind['examples']}). {ind['fit']}"]
+        intro += [f"Not handled yet: {g}" for g in ind["gaps"]]
+    else:
+        intro += ["Pick your industry on the Company tab (or ask Claude for the workbook for your industry) so the Questions tab only shows what applies."]
     for i, t in enumerate(intro, start=5):
         ws.cell(row=i, column=1, value=t).alignment = Alignment(wrap_text=True, vertical="top")
         ws.merge_cells(start_row=i, start_column=1, end_row=i, end_column=6)
@@ -229,7 +264,7 @@ def build_intake_workbook(path, cfg=None):
     _band(ws, "Company", "The basics that apply to everyone", 3)
     ws.cell(row=4, column=1, value="One answer per line. Dropdowns show the allowed values.")
     _header(ws, HEADER_ROW, [("Question",), ("Answer",), ("Help",)])
-    comp = (cfg.company if cfg else {}) | ({**(cfg.data.get("systems", {}) or {}), **(cfg.data.get("systems", {}).get("payroll_settings") or {})} if cfg else {})
+    comp = ({**(cfg.company if cfg else {}), **({'industry': industry_id} if industry_id else {})}) | ({**(cfg.data.get("systems", {}) or {}), **(cfg.data.get("systems", {}).get("payroll_settings") or {})} if cfg else {})
     for i, (label, key, kind, choices, help_) in enumerate(COMPANY_FIELDS):
         r = FIRST_DATA + i
         ws.cell(row=r, column=1, value=label).font = Font(name="Oswald", bold=True, color=NAVY)
@@ -273,7 +308,7 @@ def build_intake_workbook(path, cfg=None):
     notes = {}
     for n in (cfg.data.get("intake_notes", []) if cfg else []):
         notes[n.get("id") or n["question"]] = n.get("answer", "")
-    for i, (topic, qid, q, why) in enumerate(load_questions()):
+    for i, (topic, qid, q, why) in enumerate(load_questions(industry_id)):
         r = FIRST_DATA + i
         ws.cell(row=r, column=1, value=topic).alignment = Alignment(wrap_text=True, vertical="top")
         ws.cell(row=r, column=2, value=qid).alignment = Alignment(vertical="top")

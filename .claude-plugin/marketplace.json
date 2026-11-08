@@ -1,22 +1,31 @@
 {
-  "name": "salon-spa-payroll",
+  "name": "small-business-payroll-prep",
   "owner": {
     "name": "Laszlo Szalvay",
     "url": "https://github.com/szalvay"
   },
   "metadata": {
-    "description": "Salon & Spa Payroll Prep: catch the errors and omissions before payday."
+    "description": "Payroll Prep for Small Businesses: catch the errors and omissions before payday."
   },
   "plugins": [
     {
-      "name": "salon-spa-payroll",
+      "name": "small-business-payroll-prep",
       "source": "./",
-      "description": "Payroll prep and error checking for salons, spas, massage and wellness businesses, single or multi-location.",
-      "version": "1.0.0",
-      "author": {"name": "Laszlo Szalvay"},
+      "description": "Payroll prep and error checking for small businesses with one or more locations, with an intake tailored by industry.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Laszlo Szalvay"
+      },
       "license": "Apache-2.0",
       "category": "productivity",
-      "keywords": ["payroll", "salon", "spa", "small business"]
+      "keywords": [
+        "payroll",
+        "small business",
+        "retail",
+        "multi-location",
+        "overtime",
+        "commission"
+      ]
     }
   ]
 }

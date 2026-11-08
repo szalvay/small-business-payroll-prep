@@ -1,32 +1,34 @@
 {
-  "name": "salon-spa-payroll",
-  "displayName": "Salon & Spa Payroll Prep",
-  "version": "1.0.0",
-  "description": "Payroll prep and error checking for salons, spas, massage and wellness businesses: piece-rate service pay, add-on spiffs, commissions, tips, sick time, weekly overtime across locations and pay periods, manager bonuses, and import files for BambooHR, ADP, Paylocity and HiBob.",
+  "name": "small-business-payroll-prep",
+  "displayName": "Payroll Prep for Small Businesses",
+  "version": "1.1.0",
+  "description": "Payroll prep and error checking for small businesses with one or more locations: hourly, salaried, commissioned, tipped and piece-rate staff; overtime across locations and pay periods; commissions with returns, spiffs, tips, sick time and manager bonuses; an intake tailored by industry; and import files for BambooHR, ADP, Paylocity and HiBob.",
   "author": {
     "name": "Laszlo Szalvay",
     "url": "https://linktr.ee/eandoshow"
   },
   "homepage": "https://www.praecipio.com/claude-enablement-small-business?utm_source=claude_directory&utm_medium=social&utm_campaign=eo_show",
-  "repository": "https://github.com/szalvay/salon-spa-payroll",
+  "repository": "https://github.com/szalvay/small-business-payroll-prep",
   "license": "Apache-2.0",
   "keywords": [
     "payroll",
-    "salon",
-    "spa",
-    "massage",
+    "small business",
+    "retail",
+    "multi-location",
+    "overtime",
     "commission",
     "tips",
-    "overtime",
     "piece rate",
+    "salon",
+    "spa",
     "bamboohr",
     "adp",
     "paylocity",
     "hibob"
   ],
   "icon": ".claude-plugin/icon.png",
-  "documentationUrl": "https://github.com/szalvay/salon-spa-payroll#readme",
-  "supportUrl": "https://github.com/szalvay/salon-spa-payroll/issues",
-  "privacyPolicyUrl": "https://github.com/szalvay/salon-spa-payroll/blob/main/PRIVACY.md",
-  "termsOfServiceUrl": "https://github.com/szalvay/salon-spa-payroll/blob/main/LICENSE"
+  "documentationUrl": "https://github.com/szalvay/small-business-payroll-prep#readme",
+  "supportUrl": "https://github.com/szalvay/small-business-payroll-prep/issues",
+  "privacyPolicyUrl": "https://github.com/szalvay/small-business-payroll-prep/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/szalvay/small-business-payroll-prep/blob/main/LICENSE"
 }

@@ -1,6 +1,6 @@
 # Privacy
 
-Salon & Spa Payroll Prep collects nothing.
+Payroll Prep for Small Businesses collects nothing.
 
 - It runs entirely on files you give it, in your own workspace. It makes no network
   requests, sends no telemetry and has no accounts, servers or analytics.
@@ -12,4 +12,4 @@ Salon & Spa Payroll Prep collects nothing.
 - When you use it inside Claude, your conversation and the files you share are handled
   under your Claude account's own terms and privacy settings.
 
-Questions: open an issue at https://github.com/szalvay/salon-spa-payroll/issues
+Questions: open an issue at https://github.com/szalvay/small-business-payroll-prep/issues

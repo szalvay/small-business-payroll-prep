@@ -1,6 +1,6 @@
 # Canonical input files
 
-<!-- Generated from spapay/inputs.py by tools/build_docs.py. Edit the code, not this file. -->
+<!-- Generated from payprep/inputs.py by tools/build_docs.py. Edit the code, not this file. -->
 
 Every POS, HR system and time clock exports differently. Each export is mapped into these plain
 CSV files in `periods/<period>/inputs/`, and the engine reads nothing else. One row is one fact;

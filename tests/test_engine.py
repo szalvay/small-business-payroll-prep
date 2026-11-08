@@ -12,11 +12,11 @@ from pathlib import Path
 
 from helpers import (BASE, SKILL, Workspace, clock, codes, roster_row, svc, total)
 
-from spapay.audit import audit
-from spapay.calc import allocate, calculate
-from spapay.config import Config, validate_config
-from spapay.inputs import load_inputs
-from spapay.period import History, Period
+from payprep.audit import audit
+from payprep.calc import allocate, calculate
+from payprep.config import Config, validate_config
+from payprep.inputs import load_inputs
+from payprep.period import History, Period
 
 P1 = ("2026-10-01", "2026-10-15")
 P2 = ("2026-10-16", "2026-10-31")
@@ -328,7 +328,7 @@ class Reruns(Base):
     def test_new_period_defaults_the_monthly_window(self):
         import contextlib
         import io
-        from spapay.cli import main
+        from payprep.cli import main
         with contextlib.redirect_stdout(io.StringIO()):
             main(["new-period", str(self.ws.root), "--start", "2026-11-16", "--end", "2026-11-30", "--monthly"])
         data = json.loads((self.ws.root / "periods" / "2026-11-16_2026-11-30" / "period.json").read_text())
@@ -400,7 +400,7 @@ class SampleAndIntake(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.ws = Path(self.tmp.name) / "ws"
-        from spapay.sample import build_sample
+        from payprep.sample import build_sample
         build_sample(self.ws)
 
     def tearDown(self):
@@ -409,7 +409,7 @@ class SampleAndIntake(unittest.TestCase):
     def test_sample_runs_all_clear_end_to_end(self):
         import contextlib
         import io
-        from spapay.cli import main
+        from payprep.cli import main
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(main(["approve", str(self.ws), "--by", "Sample Owner"]), 0)
             for pid in ("2026-10-01_2026-10-15", "2026-10-16_2026-10-31"):
@@ -421,8 +421,8 @@ class SampleAndIntake(unittest.TestCase):
         self.assertTrue(weeks)
 
     def test_intake_workbook_round_trip(self):
-        from spapay.config import load_config
-        from spapay.intake import build_intake_workbook, compile_intake
+        from payprep.config import load_config
+        from payprep.intake import build_intake_workbook, compile_intake
         cfg = load_config(self.ws / "payroll_config.json")
         path = build_intake_workbook(Path(self.tmp.name) / "intake.xlsx", cfg)
         data, findings = compile_intake(path)
@@ -434,7 +434,64 @@ class SampleAndIntake(unittest.TestCase):
         self.assertEqual(sorted(back.locations), sorted(cfg.locations))
         mem = next(i for i in back.incentives if i["id"] == "memberships")
         self.assertEqual(len(mem["tiers"]), 2)
-        self.assertEqual(back.data["intake_notes"][0]["id"], "start.2")
+        self.assertEqual(back.data["intake_notes"][0]["id"], "start.4")
+        self.assertEqual(back.company.get("industry"), "healthcare")
+
+
+class RetailSample(unittest.TestCase):
+    def test_retail_sample_runs_all_clear_with_daily_and_cross_store_overtime(self):
+        import contextlib
+        import io
+        from openpyxl import load_workbook
+        from payprep.cli import main
+        with tempfile.TemporaryDirectory() as tmp:
+            ws = Path(tmp) / "retail"
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(main(["sample", str(ws), "--kind", "retail"]), 0)
+                self.assertEqual(main(["approve", str(ws), "--by", "Sample Owner"]), 0)
+                for pid in ("2026-10-05_2026-10-18", "2026-10-19_2026-11-01"):
+                    pdir = ws / "periods" / pid
+                    self.assertEqual(main(["hris-import", str(pdir), "--roster", str(pdir / "raw/adp_worker_export.csv"),
+                                           "--time-off", str(pdir / "raw/adp_time_off.csv")]), 0)
+                    self.assertEqual(main(["run", str(pdir)]), 0, pid)
+            self.assertTrue((ws / "periods" / "2026-10-19_2026-11-01" / "output" / "EPIHPX01.csv").exists())
+            ot = {}
+            for pid, end in (("2026-10-05_2026-10-18", "2026-10-18"), ("2026-10-19_2026-11-01", "2026-11-01")):
+                wb = load_workbook(ws / "periods" / pid / "output" / f"payroll_review_{end}.xlsx", data_only=True)
+                rows = list(wb["Overtime"].iter_rows(values_only=True))
+                hdr = next(i for i, r in enumerate(rows) if r and r[0] == "Employee")
+                for r in rows[hdr + 1:]:
+                    if r and r[0]:
+                        ot[(r[0], str(r[2])[:10])] = (r[6], r[7])
+            self.assertEqual(ot[("Ford, Nina", "2026-10-12")], (4, 0))       # two stores, one employer
+            self.assertEqual(ot[("Torres, Ana", "2026-10-05")], (2, 0))      # California daily overtime
+            self.assertEqual(ot[("Torres, Ana", "2026-10-26")], (4, 1))      # and double time after 12
+            self.assertEqual(ot[("Menon, Ravi", "2026-10-26")][0], 12)       # seven days in a row
+
+
+class IntakeIndustries(unittest.TestCase):
+    def test_every_industry_has_a_pack_and_filtering_works(self):
+        from payprep.intake import build_intake_workbook, industries, load_bank, load_questions
+        bank = load_bank()
+        ids = [i["id"] for i in industries()]
+        self.assertEqual(ids, ["technology", "entertainment", "healthcare", "manufacturing", "financial_services",
+                               "energy_utilities", "retail", "education", "government", "other"])
+        qids = [q["id"] for s in bank["sections"] for q in s["questions"]]
+        self.assertEqual(len(qids), len(set(qids)), "question ids must be unique")
+        for sec in bank["sections"]:
+            for ind in sec.get("industries", []):
+                self.assertIn(ind, ids, sec["id"])
+        for ind in ids[:-1]:
+            self.assertTrue(any(ind in s.get("industries", []) for s in bank["sections"]), ind)
+        retail = {q[1] for q in load_questions("retail")}
+        self.assertIn("retail.1", retail)
+        self.assertIn("salon_spa.1", retail)
+        self.assertNotIn("technology.1", retail)
+        self.assertIn("company.1", retail)
+        self.assertGreater(len(load_questions()), len(retail))
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(ValueError):
+                build_intake_workbook(Path(tmp) / "x.xlsx", None, "nope")
 
 
 if __name__ == "__main__":

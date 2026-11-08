@@ -41,7 +41,7 @@ def page(hook, label, body, title=None):
     return (f"<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
             f"<title>{html.escape(title or hook)}</title><style>{CSS}</style></head><body>"
             f"<header><p class='hook'>{hook_html}</p><div class='label'>{html.escape(label)}</div></header>"
-            f"<main>{body}</main><footer>Salon &amp; Spa Payroll Prep · catch the errors and omissions before payday · "
+            f"<main>{body}</main><footer>Payroll Prep for Small Businesses · catch the errors and omissions before payday · "
             f"not legal, tax or payroll advice; the owner reviews every run.</footer></body></html>")
 
 

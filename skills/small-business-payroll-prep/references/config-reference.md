@@ -18,6 +18,7 @@ Conventions:
 | Field | Values | Meaning |
 |---|---|---|
 | `name` | text | Business name shown on every output |
+| `industry` | `technology`, `entertainment`, `healthcare`, `manufacturing`, `financial_services`, `energy_utilities`, `retail`, `education`, `government`, `other` | Which intake questions and industry packs apply (`references/questionnaire.md`). Informational; it changes no pay rule |
 | `pay_frequency` | `weekly`, `biweekly`, `semi_monthly`, `monthly` | Sets salary per period (52, 26, 24, 12 a year) |
 | `workweek_start` | `sunday` ... `saturday` | The fixed 7-day week overtime is judged on |
 | `ot_aggregation` | `employer` (default), `location` | Add hours across all locations of the same employer, or keep each location separate |

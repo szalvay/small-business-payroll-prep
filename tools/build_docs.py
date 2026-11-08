@@ -3,7 +3,7 @@
 
 - references/questionnaire.md from assets/intake/questions.json (also the intake
   workbook's Questions tab)
-- references/input-formats.md from spapay.inputs.SPEC
+- references/input-formats.md from payprep.inputs.SPEC
 
 Edit the sources, then run:
     python3 tools/build_docs.py
@@ -12,7 +12,7 @@ import json
 import sys
 from pathlib import Path
 
-SKILL = Path(__file__).resolve().parents[1] / "skills" / "salon-spa-payroll"
+SKILL = Path(__file__).resolve().parents[1] / "skills" / "small-business-payroll-prep"
 SRC = SKILL / "assets" / "intake" / "questions.json"
 OUT = SKILL / "references" / "questionnaire.md"
 
@@ -28,8 +28,13 @@ workbook (`payroll.py intake-workbook`), so an owner can answer on paper instead
 
 - **One question at a time.** Ask, wait, then ask the next. Owners answer far better
   when they are not handed a wall of questions.
-- **Skip what does not apply.** A single-location massage studio with no front desk
-  skips half of this. Say which sections you are skipping and why.
+- **Start with the industry and how people are paid** (`start.1`, `start.2`). They
+  decide the rest: core sections marked with a pay model are asked only if someone is
+  paid that way, and only the industry packs for the owner's industry are asked. Raise
+  the industry's known gaps (below) early, so nobody finds out at the end that the tool
+  does not cover something they rely on.
+- **Skip what does not apply.** A single store with hourly staff and no commission skips
+  half of this. Say which sections you are skipping and why.
 - **Use their words, then confirm in yours.** After each section, read back what you
   heard as rules ("So: lobby time for massage therapists is paid at minimum wage, under
   the pay type Lobby. Right?"). Write the config only from confirmed answers.
@@ -55,9 +60,25 @@ Each question below lists why it matters and where the answer lands (`maps_to`).
 def main():
     data = json.loads(SRC.read_text(encoding="utf-8"))
     lines = [HEADER]
+    pm_label = {m["id"]: m["label"].split(" (")[0].lower() for m in data.get("pay_models", [])}
+    ind_label = {i["id"]: i["label"] for i in data.get("industries", [])}
+    lines.append("## Industries, what fits and what does not\n")
+    lines.append("| Industry | For example | Packs to ask | Not handled yet |")
+    lines.append("|---|---|---|---|")
+    for ind in data.get("industries", []):
+        packs = [sec["title"] for sec in data["sections"] if ind["id"] in sec.get("industries", [])]
+        gaps = " ".join(ind["gaps"]) or "Nothing known; note anything that does not fit."
+        lines.append(f"| **{ind['label']}** | {ind['examples']} | {', '.join(packs) or 'core sections only'} | {gaps} |")
+    lines.append("")
+    lines.append("Within an industry, ask only the packs that match the business (a store skips the cafe pack "
+                 "unless it has a cafe). A business that spans two industries gets both sets of packs.\n")
     total = 0
     for sec in data["sections"]:
         lines.append(f"## {sec['title']}\n")
+        if sec.get("industries"):
+            lines.append("_Industry pack: ask for " + ", ".join(ind_label[i] for i in sec["industries"]) + "._\n")
+        if sec.get("pay_models"):
+            lines.append("_Ask only if someone is paid by " + " or ".join(pm_label.get(m, m) for m in sec["pay_models"]) + "._\n")
         if sec.get("intro"):
             lines.append(sec["intro"] + "\n")
         for q in sec["questions"]:
@@ -123,9 +144,9 @@ TYPE_TEXT = {"str": "text", "date": "date", "dec": "number", "bool": "Y/N"}
 
 def input_formats():
     sys.path.insert(0, str(SKILL / "scripts"))
-    from spapay.inputs import DESCRIPTIONS, SPEC
+    from payprep.inputs import DESCRIPTIONS, SPEC
     out = ["# Canonical input files", "",
-           "<!-- Generated from spapay/inputs.py by tools/build_docs.py. Edit the code, not this file. -->", "",
+           "<!-- Generated from payprep/inputs.py by tools/build_docs.py. Edit the code, not this file. -->", "",
            "Every POS, HR system and time clock exports differently. Each export is mapped into these plain",
            "CSV files in `periods/<period>/inputs/`, and the engine reads nothing else. One row is one fact;",
            "never pre-total by hand. `payroll.py templates <dir>` writes blank copies with the right headers.", "",

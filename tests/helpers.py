@@ -8,12 +8,12 @@ from decimal import Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "salon-spa-payroll"
+SKILL = ROOT / "skills" / "small-business-payroll-prep"
 sys.path.insert(0, str(SKILL / "scripts"))
 
-from spapay.config import Config  # noqa: E402
-from spapay.inputs import SPEC  # noqa: E402
-from spapay.run import run_period  # noqa: E402
+from payprep.config import Config  # noqa: E402
+from payprep.inputs import SPEC  # noqa: E402
+from payprep.run import run_period  # noqa: E402
 
 PAY_CODES = {k: {"label": k, "code": k.upper(), "export_as": "hours" if k in ("regular", "overtime", "doubletime") else "amount"}
              for k in ("service_wages", "service_per_unit", "service_commission", "regular", "overtime", "doubletime",

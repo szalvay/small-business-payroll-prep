@@ -6,7 +6,7 @@ separate agent that did not build the period, so the work is not grading itself.
 
 ## Brief for the reviewer
 
-You are reviewing one pay period produced by the salon-spa-payroll engine. You did not
+You are reviewing one pay period produced by the small-business-payroll-prep engine. You did not
 build it. Your job is to find what is wrong or missing, not to confirm it is right.
 Report findings with evidence (file, row, numbers). Do not edit any file.
 

@@ -1,4 +1,4 @@
-"""spapay: multi-location payroll prep for salons, spas and wellness clinics.
+"""payprep: payroll prep and checking for small businesses with one or more locations.
 
 Built by Laszlo Szalvay. Apache License 2.0. Not legal, tax or payroll advice:
 the owner reviews every run before anything is paid.

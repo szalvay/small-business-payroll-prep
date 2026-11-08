@@ -128,7 +128,7 @@ POS_SPELLING = {"E101": "AVA: Thornton, Ava", "E201": "Kim, grace", "E302": "FIS
 def config():
     return {
         "schema_version": "1.0",
-        "company": {"name": "Willowbrook Spa Co. (sample)", "pay_frequency": "semi_monthly", "workweek_start": "sunday",
+        "company": {"name": "Willowbrook Spa Co. (sample)", "industry": "healthcare", "pay_frequency": "semi_monthly", "workweek_start": "sunday",
                     "ot_aggregation": "employer", "min_wage_makeup": "flag", "cash_tips": "report_only",
                     "notes": "Fictional sample business. Rates and minimum wages are example values only."},
         "approval": {},
@@ -171,7 +171,7 @@ def config():
         "pay_codes": {k: {"label": v[0], "code": v[1], "export_as": v[2]} for k, v in PAY_CODES.items()},
         "checks": {"plausibility": {"min_avg_service_hours": "0.25", "max_avg_service_hours": "4", "max_weekly_hours": "70",
                                     "anomaly_threshold": "0.25"}},
-        "intake_notes": [{"id": "start.2", "topic": "Before we start", "question": "What went wrong in past payrolls that you never want to see again?",
+        "intake_notes": [{"id": "start.4", "topic": "Before we start", "question": "What went wrong in past payrolls that you never want to see again?",
                           "answer": "A missing sick-time export once paid nobody's sick hours."}],
     }
 
