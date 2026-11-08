@@ -19,8 +19,10 @@ holidays, tips, sick time, overtime that crosses pay periods and locations. Almo
 mistake that reaches a paycheck is an omission: a missing export, a column read one
 position off, a person filtered out of a report, a new add-on code nobody priced.
 
-This skill was built from running the real payroll for a five-location massage and skin
-care business, and every check in it exists because something like it went wrong once.
+Alison built the original system with Claude, with Laszlo's help, to run the real
+payroll for a five-location massage and skin care business. A 3-4 person job spread over
+three days became one person and about half an hour from "go" to audited workbooks.
+Every check in it exists because something like it went wrong once.
 See [the lessons](skills/salon-spa-payroll/references/lessons.md).
 
 ## What it does
