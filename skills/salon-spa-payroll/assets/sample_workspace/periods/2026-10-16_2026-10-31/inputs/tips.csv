@@ -1,0 +1,423 @@
+employee_id,employee_name,location,date,tip_type,amount
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-16,card,21.78
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-16,card,19.68
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-16,card,21.52
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-16,card,21.26
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-16,card,14.15
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-19,card,13.07
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-19,card,25.91
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-19,card,22.71
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-19,card,16.44
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-19,card,12.31
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-20,card,15.26
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-20,card,15.93
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-20,card,16.89
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-21,card,22.98
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-21,card,22.86
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-21,card,20.95
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-21,card,18.30
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-21,card,23.98
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-22,card,14.18
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-22,card,19.06
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-22,card,12.63
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-23,card,13.38
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-23,card,19.44
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-23,card,22.93
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-23,card,14.19
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-23,card,14.29
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-26,card,24.93
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-26,card,14.04
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-26,card,18.03
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-26,card,17.34
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-26,card,17.78
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-27,card,24.32
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-27,card,17.89
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-27,card,20.45
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-27,card,14.01
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-28,card,16.43
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-28,card,13.86
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-28,card,15.48
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-28,card,17.90
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-28,card,13.95
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-29,card,22.55
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-29,card,15.25
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-29,card,16.74
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-30,card,22.04
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-30,card,14.14
+,"AVA: Thornton, Ava",Willowbrook Downtown,2026-10-30,card,13.94
+,"Castillo, Ben",Willowbrook Downtown,2026-10-16,card,19.61
+,"Castillo, Ben",Willowbrook Downtown,2026-10-16,card,20.76
+,"Castillo, Ben",Willowbrook Downtown,2026-10-16,card,19.76
+,"Castillo, Ben",Willowbrook Downtown,2026-10-16,card,21.43
+,"Castillo, Ben",Willowbrook Downtown,2026-10-17,card,25.23
+,"Castillo, Ben",Willowbrook Downtown,2026-10-17,card,18.69
+,"Castillo, Ben",Willowbrook Downtown,2026-10-17,card,25.55
+,"Castillo, Ben",Willowbrook Downtown,2026-10-17,card,15.47
+,"Castillo, Ben",Willowbrook Downtown,2026-10-17,card,17.26
+,"Castillo, Ben",Willowbrook Downtown,2026-10-20,card,16.87
+,"Castillo, Ben",Willowbrook Downtown,2026-10-20,card,18.17
+,"Castillo, Ben",Willowbrook Downtown,2026-10-20,card,24.64
+,"Castillo, Ben",Willowbrook Downtown,2026-10-21,card,24.34
+,"Castillo, Ben",Willowbrook Downtown,2026-10-21,card,16.83
+,"Castillo, Ben",Willowbrook Downtown,2026-10-21,card,17.29
+,"Castillo, Ben",Willowbrook Downtown,2026-10-22,card,16.00
+,"Castillo, Ben",Willowbrook Downtown,2026-10-22,card,18.18
+,"Castillo, Ben",Willowbrook Downtown,2026-10-22,card,17.60
+,"Castillo, Ben",Willowbrook Downtown,2026-10-22,card,17.75
+,"Castillo, Ben",Willowbrook Downtown,2026-10-22,card,21.50
+,"Castillo, Ben",Willowbrook Downtown,2026-10-23,card,22.24
+,"Castillo, Ben",Willowbrook Downtown,2026-10-23,card,12.45
+,"Castillo, Ben",Willowbrook Downtown,2026-10-23,card,20.28
+,"Castillo, Ben",Willowbrook Downtown,2026-10-23,card,20.80
+,"Castillo, Ben",Willowbrook Downtown,2026-10-24,card,16.68
+,"Castillo, Ben",Willowbrook Downtown,2026-10-24,card,25.14
+,"Castillo, Ben",Willowbrook Downtown,2026-10-24,card,16.69
+,"Castillo, Ben",Willowbrook Downtown,2026-10-24,card,14.54
+,"Castillo, Ben",Willowbrook Downtown,2026-10-24,card,17.32
+,"Castillo, Ben",Willowbrook Downtown,2026-10-27,card,20.19
+,"Castillo, Ben",Willowbrook Downtown,2026-10-27,card,15.20
+,"Castillo, Ben",Willowbrook Downtown,2026-10-27,card,21.88
+,"Castillo, Ben",Willowbrook Downtown,2026-10-28,card,25.53
+,"Castillo, Ben",Willowbrook Downtown,2026-10-28,card,18.71
+,"Castillo, Ben",Willowbrook Downtown,2026-10-28,card,22.03
+,"Castillo, Ben",Willowbrook Downtown,2026-10-28,card,16.46
+,"Castillo, Ben",Willowbrook Downtown,2026-10-28,card,16.09
+,"Castillo, Ben",Willowbrook Downtown,2026-10-29,card,16.19
+,"Castillo, Ben",Willowbrook Downtown,2026-10-29,card,12.32
+,"Castillo, Ben",Willowbrook Downtown,2026-10-29,card,19.57
+,"Castillo, Ben",Willowbrook Downtown,2026-10-30,card,16.30
+,"Castillo, Ben",Willowbrook Downtown,2026-10-30,card,22.52
+,"Castillo, Ben",Willowbrook Downtown,2026-10-30,card,24.57
+,"Castillo, Ben",Willowbrook Downtown,2026-10-30,card,17.17
+,"Castillo, Ben",Willowbrook Downtown,2026-10-31,card,20.61
+,"Castillo, Ben",Willowbrook Downtown,2026-10-31,card,19.21
+,"Castillo, Ben",Willowbrook Downtown,2026-10-31,card,16.59
+,"Castillo, Ben",Willowbrook Downtown,2026-10-31,card,22.79
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-16,card,14.64
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-16,card,24.99
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-16,card,23.51
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-16,card,14.99
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-17,card,18.02
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-17,card,21.61
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-17,card,16.71
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-17,card,17.19
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-17,card,21.86
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-19,card,25.40
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-19,card,21.93
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-19,card,13.74
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-19,card,15.12
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-19,card,13.16
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-21,card,14.87
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-21,card,24.96
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-21,card,12.23
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-21,card,25.43
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-21,card,14.07
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-22,card,19.09
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-22,card,20.24
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-22,card,24.45
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-23,card,23.23
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-23,card,16.04
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-23,card,22.87
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-24,card,23.36
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-24,card,16.79
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-24,card,23.41
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-24,card,14.95
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-26,card,24.27
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-26,card,18.56
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-26,card,22.19
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-28,card,25.84
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-28,card,19.38
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-28,card,12.42
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-28,card,18.76
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-29,card,14.95
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-29,card,20.51
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-29,card,13.93
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-30,card,22.76
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-30,card,16.31
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-30,card,20.65
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-30,card,17.92
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-31,card,17.56
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-31,card,16.16
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-31,card,14.41
+,"Nguyen, Chloe",Willowbrook Downtown,2026-10-31,card,18.12
+,"Patel, Dev",Willowbrook Downtown,2026-10-16,card,12.82
+,"Patel, Dev",Willowbrook Downtown,2026-10-16,card,20.31
+,"Patel, Dev",Willowbrook Downtown,2026-10-16,card,14.22
+,"Patel, Dev",Willowbrook Downtown,2026-10-16,card,24.46
+,"Patel, Dev",Willowbrook Downtown,2026-10-16,card,23.13
+,"Patel, Dev",Willowbrook Downtown,2026-10-17,card,24.21
+,"Patel, Dev",Willowbrook Downtown,2026-10-17,card,25.66
+,"Patel, Dev",Willowbrook Downtown,2026-10-17,card,15.56
+,"Patel, Dev",Willowbrook Downtown,2026-10-17,card,12.75
+,"Patel, Dev",Willowbrook Downtown,2026-10-17,card,25.42
+,"Patel, Dev",Willowbrook Downtown,2026-10-18,card,17.28
+,"Patel, Dev",Willowbrook Downtown,2026-10-18,card,12.70
+,"Patel, Dev",Willowbrook Downtown,2026-10-18,card,25.14
+,"Patel, Dev",Willowbrook Downtown,2026-10-22,card,12.80
+,"Patel, Dev",Willowbrook Downtown,2026-10-22,card,20.62
+,"Patel, Dev",Willowbrook Downtown,2026-10-22,card,12.28
+,"Patel, Dev",Willowbrook Downtown,2026-10-23,card,20.44
+,"Patel, Dev",Willowbrook Downtown,2026-10-23,card,16.34
+,"Patel, Dev",Willowbrook Downtown,2026-10-23,card,20.74
+,"Patel, Dev",Willowbrook Downtown,2026-10-23,card,13.80
+,"Patel, Dev",Willowbrook Downtown,2026-10-23,card,14.64
+,"Patel, Dev",Willowbrook Downtown,2026-10-24,card,15.83
+,"Patel, Dev",Willowbrook Downtown,2026-10-24,card,14.96
+,"Patel, Dev",Willowbrook Downtown,2026-10-24,card,23.41
+,"Patel, Dev",Willowbrook Downtown,2026-10-24,card,17.20
+,"Patel, Dev",Willowbrook Downtown,2026-10-25,card,25.32
+,"Patel, Dev",Willowbrook Downtown,2026-10-25,card,18.39
+,"Patel, Dev",Willowbrook Downtown,2026-10-25,card,21.96
+,"Patel, Dev",Willowbrook Downtown,2026-10-29,card,20.98
+,"Patel, Dev",Willowbrook Downtown,2026-10-29,card,14.96
+,"Patel, Dev",Willowbrook Downtown,2026-10-29,card,25.20
+,"Patel, Dev",Willowbrook Downtown,2026-10-29,card,20.55
+,"Patel, Dev",Willowbrook Downtown,2026-10-30,card,23.60
+,"Patel, Dev",Willowbrook Downtown,2026-10-30,card,13.24
+,"Patel, Dev",Willowbrook Downtown,2026-10-30,card,12.31
+,"Patel, Dev",Willowbrook Downtown,2026-10-30,card,18.32
+,"Patel, Dev",Willowbrook Downtown,2026-10-31,card,19.70
+,"Patel, Dev",Willowbrook Downtown,2026-10-31,card,17.80
+,"Patel, Dev",Willowbrook Downtown,2026-10-31,card,17.48
+,"Rivera, Sam",Willowbrook Downtown,2026-10-16,card,14.88
+,"Rivera, Sam",Willowbrook Downtown,2026-10-16,card,22.23
+,"Rivera, Sam",Willowbrook Downtown,2026-10-16,card,21.92
+,"Rivera, Sam",Willowbrook Downtown,2026-10-16,card,16.79
+,"Rivera, Sam",Willowbrook Downtown,2026-10-16,card,21.52
+,"Rivera, Sam",Willowbrook Downtown,2026-10-19,card,21.41
+,"Rivera, Sam",Willowbrook Downtown,2026-10-19,card,13.28
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-19,card,17.31
+,"Rivera, Sam",Willowbrook Downtown,2026-10-19,card,22.36
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-20,card,17.93
+,"Rivera, Sam",Willowbrook Downtown,2026-10-20,card,22.59
+,"Rivera, Sam",Willowbrook Downtown,2026-10-20,card,19.66
+,"Rivera, Sam",Willowbrook Downtown,2026-10-22,card,12.62
+,"Rivera, Sam",Willowbrook Downtown,2026-10-22,card,13.92
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-22,card,23.61
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-22,card,21.15
+,"Rivera, Sam",Willowbrook Downtown,2026-10-23,card,18.93
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-23,card,12.56
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-23,card,21.38
+,"Rivera, Sam",Willowbrook Downtown,2026-10-23,card,25.10
+,"Rivera, Sam",Willowbrook Downtown,2026-10-23,card,13.84
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-26,card,25.71
+,"Rivera, Sam",Willowbrook Downtown,2026-10-26,card,15.27
+,"Rivera, Sam",Willowbrook Downtown,2026-10-26,card,16.54
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-26,card,13.21
+,"Rivera, Sam",Willowbrook Downtown,2026-10-26,card,12.96
+,"Rivera, Sam",Willowbrook Downtown,2026-10-27,card,21.90
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-27,card,12.11
+,"Rivera, Sam",Willowbrook Downtown,2026-10-27,card,24.07
+,"Rivera, Sam",Willowbrook Downtown,2026-10-27,card,19.61
+,"Rivera, Sammy",Willowbrook Downtown,2026-10-27,card,19.77
+,"Rivera, Sam",Willowbrook Downtown,2026-10-29,card,21.58
+,"Rivera, Sam",Willowbrook Downtown,2026-10-29,card,15.21
+,"Rivera, Sam",Willowbrook Downtown,2026-10-29,card,19.64
+,"Rivera, Sam",Willowbrook Downtown,2026-10-30,card,19.88
+,"Rivera, Sam",Willowbrook Downtown,2026-10-30,card,18.60
+,"Rivera, Sam",Willowbrook Downtown,2026-10-30,card,14.92
+,"Kim, grace",Willowbrook Eastside,2026-10-16,card,21.24
+,"Kim, grace",Willowbrook Eastside,2026-10-16,card,20.99
+,"Kim, grace",Willowbrook Eastside,2026-10-16,card,20.43
+,"Kim, grace",Willowbrook Eastside,2026-10-16,card,23.69
+,"Kim, grace",Willowbrook Eastside,2026-10-16,card,15.43
+,"Kim, grace",Willowbrook Eastside,2026-10-17,card,21.88
+,"Kim, grace",Willowbrook Eastside,2026-10-17,card,13.16
+,"Kim, grace",Willowbrook Eastside,2026-10-17,card,25.68
+,"Kim, grace",Willowbrook Eastside,2026-10-20,card,14.44
+,"Kim, grace",Willowbrook Eastside,2026-10-20,card,19.46
+,"Kim, grace",Willowbrook Eastside,2026-10-20,card,16.88
+,"Kim, grace",Willowbrook Eastside,2026-10-20,card,20.51
+,"Kim, grace",Willowbrook Eastside,2026-10-20,card,14.95
+,"Kim, grace",Willowbrook Eastside,2026-10-21,card,18.98
+,"Kim, grace",Willowbrook Eastside,2026-10-21,card,22.78
+,"Kim, grace",Willowbrook Eastside,2026-10-21,card,20.91
+,"Kim, grace",Willowbrook Eastside,2026-10-22,card,15.70
+,"Kim, grace",Willowbrook Eastside,2026-10-22,card,22.68
+,"Kim, grace",Willowbrook Eastside,2026-10-22,card,16.02
+,"Kim, grace",Willowbrook Eastside,2026-10-22,card,24.46
+,"Kim, grace",Willowbrook Eastside,2026-10-23,card,24.54
+,"Kim, grace",Willowbrook Eastside,2026-10-23,card,15.93
+,"Kim, grace",Willowbrook Eastside,2026-10-23,card,12.20
+,"Kim, grace",Willowbrook Eastside,2026-10-23,card,22.64
+,"Kim, grace",Willowbrook Eastside,2026-10-24,card,19.11
+,"Kim, grace",Willowbrook Eastside,2026-10-24,card,25.09
+,"Kim, grace",Willowbrook Eastside,2026-10-24,card,21.76
+,"Kim, grace",Willowbrook Eastside,2026-10-24,card,17.45
+,"Kim, grace",Willowbrook Eastside,2026-10-24,card,19.51
+,"Kim, grace",Willowbrook Eastside,2026-10-27,card,12.09
+,"Kim, grace",Willowbrook Eastside,2026-10-27,card,21.12
+,"Kim, grace",Willowbrook Eastside,2026-10-27,card,17.01
+,"Kim, grace",Willowbrook Eastside,2026-10-27,card,19.81
+,"Kim, grace",Willowbrook Eastside,2026-10-27,card,13.25
+,"Kim, grace",Willowbrook Eastside,2026-10-28,card,22.51
+,"Kim, grace",Willowbrook Eastside,2026-10-28,card,23.00
+,"Kim, grace",Willowbrook Eastside,2026-10-28,card,16.58
+,"Kim, grace",Willowbrook Eastside,2026-10-29,card,23.37
+,"Kim, grace",Willowbrook Eastside,2026-10-29,card,17.35
+,"Kim, grace",Willowbrook Eastside,2026-10-29,card,25.04
+,"Kim, grace",Willowbrook Eastside,2026-10-30,card,14.10
+,"Kim, grace",Willowbrook Eastside,2026-10-30,card,15.66
+,"Kim, grace",Willowbrook Eastside,2026-10-30,card,21.52
+,"Kim, grace",Willowbrook Eastside,2026-10-30,card,17.72
+,"Kim, grace",Willowbrook Eastside,2026-10-30,card,14.80
+,"Kim, grace",Willowbrook Eastside,2026-10-31,card,21.46
+,"Kim, grace",Willowbrook Eastside,2026-10-31,card,12.37
+,"Kim, grace",Willowbrook Eastside,2026-10-31,card,20.61
+,"Silva, Hugo",Willowbrook Eastside,2026-10-19,card,13.06
+,"Silva, Hugo",Willowbrook Eastside,2026-10-19,card,16.92
+,"Silva, Hugo",Willowbrook Eastside,2026-10-19,card,23.55
+,"Silva, Hugo",Willowbrook Eastside,2026-10-19,card,23.49
+,"Silva, Hugo",Willowbrook Eastside,2026-10-19,card,15.00
+,"Silva, Hugo",Willowbrook Eastside,2026-10-20,card,25.58
+,"Silva, Hugo",Willowbrook Eastside,2026-10-20,card,14.23
+,"Silva, Hugo",Willowbrook Eastside,2026-10-20,card,18.64
+,"Silva, Hugo",Willowbrook Eastside,2026-10-20,card,25.70
+,"Silva, Hugo",Willowbrook Eastside,2026-10-21,card,21.29
+,"Silva, Hugo",Willowbrook Eastside,2026-10-21,card,12.82
+,"Silva, Hugo",Willowbrook Eastside,2026-10-21,card,24.71
+,"Silva, Hugo",Willowbrook Eastside,2026-10-22,card,23.10
+,"Silva, Hugo",Willowbrook Eastside,2026-10-22,card,17.13
+,"Silva, Hugo",Willowbrook Eastside,2026-10-22,card,20.88
+,"Silva, Hugo",Willowbrook Eastside,2026-10-22,card,17.88
+,"Silva, Hugo",Willowbrook Eastside,2026-10-22,card,25.26
+,"Silva, Hugo",Willowbrook Eastside,2026-10-26,card,22.52
+,"Silva, Hugo",Willowbrook Eastside,2026-10-26,card,24.08
+,"Silva, Hugo",Willowbrook Eastside,2026-10-26,card,21.01
+,"Silva, Hugo",Willowbrook Eastside,2026-10-27,card,23.82
+,"Silva, Hugo",Willowbrook Eastside,2026-10-27,card,13.79
+,"Silva, Hugo",Willowbrook Eastside,2026-10-27,card,21.30
+,"Silva, Hugo",Willowbrook Eastside,2026-10-28,card,16.12
+,"Silva, Hugo",Willowbrook Eastside,2026-10-28,card,21.43
+,"Silva, Hugo",Willowbrook Eastside,2026-10-28,card,21.78
+,"Silva, Hugo",Willowbrook Eastside,2026-10-28,card,12.63
+,"Silva, Hugo",Willowbrook Eastside,2026-10-28,card,15.86
+,"Silva, Hugo",Willowbrook Eastside,2026-10-29,card,19.22
+,"Silva, Hugo",Willowbrook Eastside,2026-10-29,card,16.88
+,"Silva, Hugo",Willowbrook Eastside,2026-10-29,card,22.06
+,"Silva, Hugo",Willowbrook Eastside,2026-10-29,card,16.42
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-20,card,24.40
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-20,card,13.27
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-20,card,21.00
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-21,card,25.87
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-21,card,20.53
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-21,card,14.87
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-22,card,22.60
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-22,card,21.73
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-22,card,24.94
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-22,card,12.08
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-22,card,23.99
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-23,card,24.72
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-23,card,21.37
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-23,card,17.99
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-23,card,23.37
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-26,card,19.79
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-26,card,22.99
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-26,card,20.92
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-26,card,16.75
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-26,card,18.76
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-27,card,16.18
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-27,card,12.21
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-27,card,22.18
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-27,card,18.39
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-27,card,20.95
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-28,card,19.97
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-28,card,24.17
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-28,card,12.21
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-28,card,14.02
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-28,card,20.21
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-29,card,20.62
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-29,card,24.79
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-29,card,22.85
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-29,card,15.49
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-29,card,13.53
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-30,card,19.03
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-30,card,20.61
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-30,card,22.47
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-30,card,15.85
+,"Ortiz, Jon",Willowbrook Eastside,2026-10-30,card,24.90
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-16,card,24.92
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-16,card,20.42
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-16,card,18.28
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-19,card,20.14
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-19,card,25.68
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-19,card,22.19
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-19,card,25.24
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-19,card,14.94
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-20,card,22.61
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-20,card,13.55
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-20,card,22.04
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-20,card,13.27
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-21,card,16.87
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-21,card,12.67
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-21,card,23.92
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-21,card,21.21
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-21,card,13.11
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-22,card,12.89
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-22,card,17.10
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-22,card,15.55
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-22,card,18.21
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-23,card,13.38
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-23,card,25.82
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-23,card,20.46
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-23,card,21.92
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-26,card,19.76
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-26,card,20.11
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-26,card,18.86
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-27,card,13.34
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-27,card,19.19
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-27,card,15.91
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-27,card,16.85
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-28,card,16.95
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-28,card,17.52
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-28,card,14.61
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-28,card,16.91
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-29,card,19.71
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-29,card,16.26
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-29,card,22.33
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-29,card,21.27
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-30,card,21.01
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-30,card,22.94
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-30,card,22.44
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-30,card,25.88
+,"Alvarez, Theo",Willowbrook Riverside,2026-10-30,card,19.88
+,"Okafor, Maya",Willowbrook Riverside,2026-10-16,card,12.30
+,"Okafor, Maya",Willowbrook Riverside,2026-10-16,card,15.62
+,"Okafor, Maya",Willowbrook Riverside,2026-10-16,card,25.57
+,"Okafor, Maya",Willowbrook Riverside,2026-10-16,card,19.40
+,"Okafor, Maya",Willowbrook Riverside,2026-10-16,card,15.94
+,"Okafor, Maya",Willowbrook Riverside,2026-10-17,card,14.58
+,"Okafor, Maya",Willowbrook Riverside,2026-10-17,card,19.28
+,"Okafor, Maya",Willowbrook Riverside,2026-10-17,card,21.51
+,"Okafor, Maya",Willowbrook Riverside,2026-10-17,card,14.70
+,"Okafor, Maya",Willowbrook Riverside,2026-10-21,card,25.59
+,"Okafor, Maya",Willowbrook Riverside,2026-10-21,card,20.44
+,"Okafor, Maya",Willowbrook Riverside,2026-10-21,card,21.47
+,"Okafor, Maya",Willowbrook Riverside,2026-10-22,card,14.00
+,"Okafor, Maya",Willowbrook Riverside,2026-10-22,card,17.54
+,"Okafor, Maya",Willowbrook Riverside,2026-10-22,card,25.87
+,"Okafor, Maya",Willowbrook Riverside,2026-10-22,card,24.46
+,"Okafor, Maya",Willowbrook Riverside,2026-10-23,card,12.80
+,"Okafor, Maya",Willowbrook Riverside,2026-10-23,card,25.07
+,"Okafor, Maya",Willowbrook Riverside,2026-10-23,card,16.66
+,"Okafor, Maya",Willowbrook Riverside,2026-10-24,card,20.90
+,"Okafor, Maya",Willowbrook Riverside,2026-10-24,card,19.14
+,"Okafor, Maya",Willowbrook Riverside,2026-10-24,card,25.42
+,"Okafor, Maya",Willowbrook Riverside,2026-10-24,card,23.98
+,"Okafor, Maya",Willowbrook Riverside,2026-10-24,card,17.00
+,"Okafor, Maya",Willowbrook Riverside,2026-10-28,card,19.07
+,"Okafor, Maya",Willowbrook Riverside,2026-10-28,card,20.54
+,"Okafor, Maya",Willowbrook Riverside,2026-10-28,card,24.60
+,"Okafor, Maya",Willowbrook Riverside,2026-10-29,card,20.68
+,"Okafor, Maya",Willowbrook Riverside,2026-10-29,card,22.30
+,"Okafor, Maya",Willowbrook Riverside,2026-10-29,card,24.86
+,"Okafor, Maya",Willowbrook Riverside,2026-10-29,card,13.11
+,"Okafor, Maya",Willowbrook Riverside,2026-10-30,card,14.61
+,"Okafor, Maya",Willowbrook Riverside,2026-10-30,card,12.89
+,"Okafor, Maya",Willowbrook Riverside,2026-10-30,card,23.45
+,"Okafor, Maya",Willowbrook Riverside,2026-10-31,card,25.05
+,"Okafor, Maya",Willowbrook Riverside,2026-10-31,card,17.11
+,"Okafor, Maya",Willowbrook Riverside,2026-10-31,card,19.11
+,"Okafor, Maya",Willowbrook Riverside,2026-10-31,card,25.03
+,"Okafor, Maya",Willowbrook Riverside,2026-10-31,card,21.96
+E301,,VA,2026-10-19,cash,40.00

@@ -1,0 +1,212 @@
+{
+  "id": "generic",
+  "name": "Generic CSV",
+  "status": "Works with any system that accepts a one-row-per-pay-code CSV.",
+  "docs": [
+    "Use when your payroll system is not listed, or to hand a clean file to a bookkeeper."
+  ],
+  "inbound": {
+    "roster": {
+      "columns": {
+        "employee_id": [
+          "Employee ID",
+          "Employee #",
+          "Employee Number",
+          "Employee Id",
+          "EEID",
+          "ID"
+        ],
+        "payroll_id": [
+          "Payroll ID",
+          "File Number",
+          "File #"
+        ],
+        "first_name": [
+          "First Name",
+          "Legal First Name",
+          "First name"
+        ],
+        "last_name": [
+          "Last Name",
+          "Legal Last Name",
+          "Last name",
+          "Surname"
+        ],
+        "status": [
+          "Status",
+          "Employment Status",
+          "Employee Status"
+        ],
+        "hire_date": [
+          "Hire Date",
+          "Start Date",
+          "Original Hire Date"
+        ],
+        "termination_date": [
+          "Termination Date",
+          "Term Date"
+        ],
+        "location": [
+          "Location",
+          "Work Location",
+          "Site"
+        ],
+        "job_title": [
+          "Job Title",
+          "Title",
+          "Position"
+        ],
+        "pay_rate": [
+          "Pay Rate",
+          "Rate",
+          "Base Rate",
+          "Hourly Rate",
+          "Salary"
+        ],
+        "pay_type": [
+          "Pay Type",
+          "Rate Type"
+        ],
+        "pay_per": [
+          "Pay Per",
+          "Paid Per",
+          "Pay Period"
+        ],
+        "rate_effective": [
+          "Rate Effective Date",
+          "Effective Date"
+        ],
+        "email": [
+          "Work Email",
+          "Email"
+        ]
+      },
+      "value_maps": {
+        "status": {
+          "active": "active",
+          "a": "active",
+          "employed": "active",
+          "full-time": "active",
+          "part-time": "active",
+          "full time": "active",
+          "part time": "active",
+          "terminated": "terminated",
+          "t": "terminated",
+          "inactive": "terminated",
+          "leave": "leave",
+          "l": "leave",
+          "leave of absence": "leave",
+          "on leave": "leave"
+        }
+      }
+    },
+    "time_off": {
+      "columns": {
+        "employee_id": [
+          "Employee ID",
+          "Employee #",
+          "Employee Number",
+          "Employee Id"
+        ],
+        "employee_name": [
+          "Employee Name",
+          "Name",
+          "Employee"
+        ],
+        "date": [
+          "Date",
+          "Date Taken"
+        ],
+        "start_date": [
+          "Start Date",
+          "Start",
+          "From"
+        ],
+        "end_date": [
+          "End Date",
+          "End",
+          "To"
+        ],
+        "type": [
+          "Type",
+          "Time Off Type",
+          "Category",
+          "Policy"
+        ],
+        "hours": [
+          "Hours",
+          "Hours Used",
+          "Amount",
+          "Total Hours"
+        ]
+      },
+      "type_map": {
+        "sick": "sick",
+        "sick leave": "sick",
+        "sick time": "sick",
+        "paid sick": "sick",
+        "pto": "pto",
+        "paid time off": "pto",
+        "vacation": "pto",
+        "personal": "pto",
+        "holiday": "holiday",
+        "bereavement": "bereavement",
+        "jury duty": "jury_duty",
+        "unpaid": "unpaid",
+        "unpaid leave": "unpaid"
+      }
+    }
+  },
+  "outbound": [
+    {
+      "id": "earnings",
+      "label": "Earnings (one row per employee per pay code)",
+      "layout": "long",
+      "filename": "payroll_import_{period_end}.csv",
+      "include": "all",
+      "blank_amount_for_hours": false,
+      "columns": [
+        [
+          "Employee ID",
+          "payroll_id"
+        ],
+        [
+          "Employee Name",
+          "name"
+        ],
+        [
+          "Location",
+          "location_code"
+        ],
+        [
+          "Pay Code",
+          "code"
+        ],
+        [
+          "Description",
+          "label"
+        ],
+        [
+          "Hours",
+          "hours_always"
+        ],
+        [
+          "Rate",
+          "rate"
+        ],
+        [
+          "Amount",
+          "amount"
+        ],
+        [
+          "Period Start",
+          "date:period_start|iso"
+        ],
+        [
+          "Period End",
+          "date:period_end|iso"
+        ]
+      ]
+    }
+  ]
+}

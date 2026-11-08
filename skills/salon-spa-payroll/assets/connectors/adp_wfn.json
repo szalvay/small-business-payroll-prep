@@ -1,0 +1,184 @@
+{
+  "id": "adp_wfn",
+  "name": "ADP Workforce Now",
+  "status": "Starting template. Download the import template from your own account and compare the column headers and order before the first live upload; copy this file to <workspace>/connectors/ and edit it there.",
+  "docs": [
+    "Outbound is the Paydata batch import (Process > Payroll > Pay Data > Import from File). Co Code, Batch ID and File # must be the first three columns.",
+    "File name convention: EPI + your 3-character company code + two characters, e.g. EPIABC01.csv. Batch ID defaults to the pay date as YYMMDD.",
+    "Reg Hours and O/T Hours are paid at the rate ADP has on file. Other hours use Hours 3/4 code + amount pairs; dollar earnings use Earnings 3/4/5 code + amount pairs. Codes must be your ADP earnings codes.",
+    "Extra codes spill onto another row for the same File #. Remove the Temp Dept column if you do not charge pay to departments.",
+    "ADP RUN uses a different import; use the generic profile and its RUN import mapping instead."
+  ],
+  "defaults": {
+    "batch_suffix": "01",
+    "split_by_location": true
+  },
+  "inbound": {
+    "roster": {
+      "columns": {
+        "employee_id": [
+          "Associate ID",
+          "Employee ID",
+          "File Number",
+          "Position ID"
+        ],
+        "payroll_id": [
+          "File Number",
+          "Position ID",
+          "File #"
+        ],
+        "first_name": [
+          "Legal First Name",
+          "First Name"
+        ],
+        "last_name": [
+          "Legal Last Name",
+          "Last Name"
+        ],
+        "status": [
+          "Position Status",
+          "Worker Status",
+          "Employee Status",
+          "Status"
+        ],
+        "hire_date": [
+          "Hire Date",
+          "Hire/Rehire Date",
+          "Original Hire Date"
+        ],
+        "termination_date": [
+          "Termination Date",
+          "Term Date"
+        ],
+        "location": [
+          "Location Description",
+          "Work Location",
+          "Location",
+          "Home Department Description"
+        ],
+        "job_title": [
+          "Job Title Description",
+          "Job Title",
+          "Position Title"
+        ],
+        "pay_rate": [
+          "Regular Pay Rate Amount",
+          "Rate Amount",
+          "Regular Pay Rate",
+          "Annual Salary"
+        ],
+        "pay_type": [
+          "Regular Pay Rate Description",
+          "Pay Type",
+          "Rate Type",
+          "Compensation Type"
+        ],
+        "pay_per": [
+          "Pay Per",
+          "Paid Per",
+          "Pay Period"
+        ],
+        "rate_effective": [
+          "Regular Pay Effective Date",
+          "Rate Effective Date"
+        ],
+        "email": [
+          "Work Contact: Work Email",
+          "Work Email"
+        ]
+      },
+      "value_maps": {
+        "status": {
+          "active": "active",
+          "a": "active",
+          "employed": "active",
+          "full-time": "active",
+          "part-time": "active",
+          "full time": "active",
+          "part time": "active",
+          "terminated": "terminated",
+          "t": "terminated",
+          "inactive": "terminated",
+          "leave": "leave",
+          "l": "leave",
+          "leave of absence": "leave",
+          "on leave": "leave"
+        }
+      }
+    },
+    "time_off": {
+      "columns": {
+        "employee_id": [
+          "Associate ID",
+          "File Number",
+          "Employee ID"
+        ],
+        "employee_name": [
+          "Payroll Name",
+          "Name",
+          "Employee Name"
+        ],
+        "date": [
+          "Date",
+          "Time Off Date",
+          "Pay Date"
+        ],
+        "start_date": [
+          "Start Date",
+          "Start",
+          "From"
+        ],
+        "end_date": [
+          "End Date",
+          "End",
+          "To"
+        ],
+        "type": [
+          "Time Off Policy",
+          "Policy",
+          "Pay Code",
+          "Earnings Code"
+        ],
+        "hours": [
+          "Hours",
+          "Time Off Hours",
+          "Amount"
+        ]
+      },
+      "type_map": {
+        "sick": "sick",
+        "sick leave": "sick",
+        "sick time": "sick",
+        "paid sick": "sick",
+        "pto": "pto",
+        "paid time off": "pto",
+        "vacation": "pto",
+        "personal": "pto",
+        "holiday": "holiday",
+        "bereavement": "bereavement",
+        "jury duty": "jury_duty",
+        "unpaid": "unpaid",
+        "unpaid leave": "unpaid"
+      }
+    }
+  },
+  "outbound": [
+    {
+      "id": "paydata",
+      "label": "Paydata batch (EPI file)",
+      "layout": "adp_epi",
+      "filename": "EPI{co_code}{batch_suffix}.csv",
+      "settings_required": [
+        "co_code"
+      ],
+      "hours_slots": 2,
+      "earnings_slots": 3,
+      "regular_keys": [
+        "regular"
+      ],
+      "overtime_keys": [
+        "overtime"
+      ]
+    }
+  ]
+}

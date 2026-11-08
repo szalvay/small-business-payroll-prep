@@ -1,0 +1,17 @@
+Employee #,First Name,Last Name,Status,Hire Date,Termination Date,Location,Job Title,Pay Rate,Pay Type,Work Email
+E101,Ava,Thornton,Active,03/01/2024,,Downtown Portland,Massage Therapist,$26.00 USD per Hour,Hourly,ava@example.com
+E102,Ben,Castillo,Active,06/12/2023,,Downtown Portland,Massage Therapist,$24.00 USD per Hour,Hourly,ben@example.com
+E103,Chloe,Nguyen,Active,01/15/2025,,Downtown Portland,Esthetician,$24.00 USD per Hour,Hourly,chloe@example.com
+E104,Dev,Patel,Active,05/02/2025,,Downtown Portland,Stretch Therapist,$22.00 USD per Hour,Hourly,dev@example.com
+E105,Ella,Brooks,Active,09/09/2024,,Downtown Portland,Front Desk Associate,$17.50 USD per Hour,Hourly,ella@example.com
+E106,Finn,Murphy,Active,02/20/2025,,Downtown Portland,Front Desk Associate,$18.00 USD per Hour,Hourly,finn@example.com
+E107,Sam,Rivera,Active,11/01/2023,,Downtown Portland,Massage Therapist,$25.00 USD per Hour,Hourly,sam@example.com
+E201,Grace,Kim,Active,08/18/2025,,Eastside Salem,Massage Therapist,$23.00 USD per Hour,Hourly,grace@example.com
+E202,Hugo,Silva,Active,04/04/2024,,Eastside Salem,Esthetician,$22.00 USD per Hour,Hourly,hugo@example.com
+E203,Iris,Lane,Terminated,03/03/2025,10/28/2026,Eastside Salem,Front Desk Associate,$16.50 USD per Hour,Hourly,iris@example.com
+E204,Jon,Ortiz,Active,10/20/2026,,Eastside Salem,Massage Therapist,$23.00 USD per Hour,Hourly,jon@example.com
+E301,Theo,Alvarez,Active,07/07/2024,,Riverside Vancouver,Massage Therapist,$27.00 USD per Hour,Hourly,theo@example.com
+E302,Lena,Fischer,Active,10/01/2025,,Riverside Vancouver,Front Desk Associate,$18.50 USD per Hour,Hourly,lena@example.com
+E303,Maya,Okafor,Active,12/01/2024,,Riverside Vancouver,Esthetician,$25.00 USD per Hour,Hourly,maya@example.com
+M1,Nora,Bennett,Active,01/10/2022,,Downtown Portland,Location Manager,"$58,000.00 USD per Year",Salary,nora@example.com
+M2,Owen,Marsh,Active,02/01/2023,,Riverside Vancouver,Location Manager,"$54,000.00 USD per Year",Salary,owen@example.com

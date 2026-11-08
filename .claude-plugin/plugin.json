@@ -1,0 +1,27 @@
+{
+  "name": "salon-spa-payroll",
+  "version": "1.0.0",
+  "description": "Payroll prep and error checking for salons, spas, massage and wellness businesses: piece-rate service pay, add-on spiffs, commissions, tips, sick time, weekly overtime across locations and pay periods, manager bonuses, and import files for BambooHR, ADP, Paylocity and HiBob.",
+  "author": {
+    "name": "Laszlo Szalvay",
+    "url": "https://github.com/szalvay"
+  },
+  "homepage": "https://github.com/szalvay/salon-spa-payroll",
+  "repository": "https://github.com/szalvay/salon-spa-payroll",
+  "license": "Apache-2.0",
+  "keywords": [
+    "payroll",
+    "salon",
+    "spa",
+    "massage",
+    "commission",
+    "tips",
+    "overtime",
+    "piece rate",
+    "bamboohr",
+    "adp",
+    "paylocity",
+    "hibob"
+  ],
+  "icon": ".claude-plugin/icon.png"
+}

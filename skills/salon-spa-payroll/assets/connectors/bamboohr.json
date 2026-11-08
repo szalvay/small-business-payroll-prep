@@ -1,0 +1,266 @@
+{
+  "id": "bamboohr",
+  "name": "BambooHR",
+  "status": "Starting template. Download the import template from your own account and compare the column headers and order before the first live upload; copy this file to <workspace>/connectors/ and edit it there.",
+  "docs": [
+    "Roster: Reports > New custom report with Employee #, First Name, Last Name, Status, Hire Date, Termination Date, Location, Job Title, Pay Rate, Pay Type; export to CSV or Excel.",
+    "Time off: the 'Time Off Used' report for exactly the pay period dates.",
+    "Hours: Settings > Account > Import Hours (template has Employee #, Hours Worked Date, Rate Type, Hours Worked ...). Rate Type is REG, OT or DT.",
+    "Dollar amounts: Payroll tab > Extra Pay > Upload Extra Pay (Employee Number, Pay Type, Amount). Pay Type must match a BambooHR pay type name exactly.",
+    "If BambooHR Payroll already pays approved time off from its own records, set those pay codes to export_as 'none' so they are not paid twice.",
+    "Leave Pay Rate blank in the hours file unless you mean to override the compensation table."
+  ],
+  "inbound": {
+    "roster": {
+      "columns": {
+        "employee_id": [
+          "Employee #",
+          "Employee Number",
+          "Employee ID",
+          "EEID"
+        ],
+        "payroll_id": [
+          "Payroll ID",
+          "File Number",
+          "File #"
+        ],
+        "first_name": [
+          "First Name",
+          "Legal First Name",
+          "First name"
+        ],
+        "last_name": [
+          "Last Name",
+          "Legal Last Name",
+          "Last name",
+          "Surname"
+        ],
+        "status": [
+          "Status",
+          "Employment Status",
+          "Employee Status"
+        ],
+        "hire_date": [
+          "Hire Date",
+          "Start Date",
+          "Original Hire Date"
+        ],
+        "termination_date": [
+          "Termination Date",
+          "Term Date"
+        ],
+        "location": [
+          "Location",
+          "Work Location",
+          "Site"
+        ],
+        "job_title": [
+          "Job Title",
+          "Title",
+          "Position"
+        ],
+        "pay_rate": [
+          "Pay Rate",
+          "Rate",
+          "Base Rate",
+          "Hourly Rate",
+          "Salary"
+        ],
+        "pay_type": [
+          "Pay Type",
+          "Rate Type"
+        ],
+        "pay_per": [
+          "Pay Per",
+          "Paid Per",
+          "Pay Period"
+        ],
+        "rate_effective": [
+          "Compensation: Date",
+          "Pay Rate Effective Date",
+          "Effective Date"
+        ],
+        "email": [
+          "Work Email",
+          "Email"
+        ]
+      },
+      "value_maps": {
+        "status": {
+          "active": "active",
+          "a": "active",
+          "employed": "active",
+          "full-time": "active",
+          "part-time": "active",
+          "full time": "active",
+          "part time": "active",
+          "terminated": "terminated",
+          "t": "terminated",
+          "inactive": "terminated",
+          "leave": "leave",
+          "l": "leave",
+          "leave of absence": "leave",
+          "on leave": "leave"
+        }
+      }
+    },
+    "time_off": {
+      "columns": {
+        "employee_id": [
+          "Employee #",
+          "Employee Number",
+          "Employee ID"
+        ],
+        "employee_name": [
+          "Employee Name",
+          "Name",
+          "Employee"
+        ],
+        "date": [
+          "Date",
+          "Date Taken"
+        ],
+        "start_date": [
+          "Start Date",
+          "Start",
+          "From"
+        ],
+        "end_date": [
+          "End Date",
+          "End",
+          "To"
+        ],
+        "type": [
+          "Time Off Type",
+          "Type",
+          "Category",
+          "Policy"
+        ],
+        "hours": [
+          "Hours",
+          "Amount",
+          "Hours Used",
+          "Used (Hours)"
+        ]
+      },
+      "type_map": {
+        "sick": "sick",
+        "sick leave": "sick",
+        "sick time": "sick",
+        "paid sick": "sick",
+        "pto": "pto",
+        "paid time off": "pto",
+        "vacation": "pto",
+        "personal": "pto",
+        "holiday": "holiday",
+        "bereavement": "bereavement",
+        "jury duty": "jury_duty",
+        "unpaid": "unpaid",
+        "unpaid leave": "unpaid"
+      }
+    }
+  },
+  "outbound": [
+    {
+      "id": "hours",
+      "label": "Import Hours (hourly REG / OT / DT)",
+      "layout": "long",
+      "include": "hours",
+      "filename": "bamboohr_import_hours_{period_end}.csv",
+      "include_rate": false,
+      "rate_type_map": {
+        "regular": "REG",
+        "overtime": "OT",
+        "doubletime": "DT",
+        "default": "REG"
+      },
+      "columns": [
+        [
+          "Employee #",
+          "payroll_id"
+        ],
+        [
+          "Time Entry ID",
+          "blank"
+        ],
+        [
+          "Division",
+          "blank"
+        ],
+        [
+          "Department",
+          "blank"
+        ],
+        [
+          "Job Title",
+          "blank"
+        ],
+        [
+          "Pay Code",
+          "code"
+        ],
+        [
+          "Hours Worked Date",
+          "date:period_end|mdy"
+        ],
+        [
+          "Pay Rate",
+          "rate"
+        ],
+        [
+          "Rate Type",
+          "rate_type"
+        ],
+        [
+          "Hours Worked",
+          "hours"
+        ],
+        [
+          "Job Code",
+          "blank"
+        ],
+        [
+          "Job Data 1",
+          "blank"
+        ],
+        [
+          "Job Data 2",
+          "blank"
+        ],
+        [
+          "Job Data 3",
+          "blank"
+        ],
+        [
+          "Job Data 4",
+          "blank"
+        ],
+        [
+          "Delete",
+          "blank"
+        ]
+      ]
+    },
+    {
+      "id": "extra_pay",
+      "label": "Upload Extra Pay (dollar amounts)",
+      "layout": "long",
+      "include": "amount",
+      "filename": "bamboohr_extra_pay_{period_end}.csv",
+      "columns": [
+        [
+          "Employee Number",
+          "payroll_id"
+        ],
+        [
+          "Pay Type",
+          "code"
+        ],
+        [
+          "Amount",
+          "amount"
+        ]
+      ]
+    }
+  ]
+}

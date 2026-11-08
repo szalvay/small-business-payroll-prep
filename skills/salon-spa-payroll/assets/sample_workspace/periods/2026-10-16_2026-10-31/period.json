@@ -1,0 +1,108 @@
+{
+  "period_start": "2026-10-16",
+  "period_end": "2026-10-31",
+  "pay_date": "2026-11-05",
+  "include_monthly": true,
+  "monthly_window": {
+    "start": "2026-10-01",
+    "end": "2026-10-31"
+  },
+  "windows": {
+    "gift_cards": {
+      "start": "2026-10-16",
+      "end": "2026-10-29"
+    }
+  },
+  "attestations": [],
+  "sources": [
+    {
+      "file": "raw/DT_service_detail.xlsx",
+      "report": "Service detail by provider",
+      "location_id": "DT",
+      "date_from": "2026-10-16",
+      "date_to": "2026-10-31",
+      "mapped_to": "services",
+      "totals": {
+        "service_hours": "202.00",
+        "quantity": "216"
+      }
+    },
+    {
+      "file": "raw/DT_addons.xlsx",
+      "report": "Add-ons by provider",
+      "location_id": "DT",
+      "date_from": "2026-10-16",
+      "date_to": "2026-10-31",
+      "mapped_to": "addons",
+      "totals": {
+        "quantity": "46"
+      }
+    },
+    {
+      "file": "raw/EC_service_detail.xlsx",
+      "report": "Service detail by provider",
+      "location_id": "EC",
+      "date_from": "2026-10-16",
+      "date_to": "2026-10-31",
+      "mapped_to": "services",
+      "totals": {
+        "service_hours": "127.00",
+        "quantity": "120"
+      }
+    },
+    {
+      "file": "raw/EC_addons.xlsx",
+      "report": "Add-ons by provider",
+      "location_id": "EC",
+      "date_from": "2026-10-16",
+      "date_to": "2026-10-31",
+      "mapped_to": "addons",
+      "totals": {
+        "quantity": "34"
+      }
+    },
+    {
+      "file": "raw/VA_service_detail.xlsx",
+      "report": "Service detail by provider",
+      "location_id": "VA",
+      "date_from": "2026-10-16",
+      "date_to": "2026-10-31",
+      "mapped_to": "services",
+      "totals": {
+        "service_hours": "86.50",
+        "quantity": "84"
+      }
+    },
+    {
+      "file": "raw/VA_addons.xlsx",
+      "report": "Add-ons by provider",
+      "location_id": "VA",
+      "date_from": "2026-10-16",
+      "date_to": "2026-10-31",
+      "mapped_to": "addons",
+      "totals": {
+        "quantity": "25"
+      }
+    }
+  ],
+  "approved_variances": [],
+  "expected_activity": [
+    {
+      "employee_id": "E102",
+      "input": "time_entries",
+      "category": "trainer",
+      "minimum": "1",
+      "reason": "Owner asked Downtown to record Ben's training of Jon on 10/20"
+    }
+  ],
+  "acknowledged_warnings": [
+    {
+      "code": "INC_OUTSIDE_WINDOW",
+      "match": "gift_cards",
+      "by": "Owner",
+      "note": "Holiday gift card commission covers sales through 10/29 only"
+    }
+  ],
+  "salary_proration": null,
+  "notes": "Sample period. Raw HRIS exports are in raw/; run hris-import to build roster.csv, pay_rates.csv and time_off.csv."
+}

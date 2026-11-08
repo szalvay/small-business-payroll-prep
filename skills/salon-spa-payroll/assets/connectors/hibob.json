@@ -1,0 +1,193 @@
+{
+  "id": "hibob",
+  "name": "HiBob (Bob)",
+  "status": "Starting template. Download the import template from your own account and compare the column headers and order before the first live upload; copy this file to <workspace>/connectors/ and edit it there.",
+  "docs": [
+    "In the US, Bob either runs payroll itself (Bob US Payroll) or sends payroll changes to another provider through Payroll Hub.",
+    "Roster: People > Reports, export the people data report with Employee ID, First name, Last name, Lifecycle status, Start date, Termination date, Site, Job title, Base salary, Salary pay period.",
+    "Time off: the time off report for exactly the pay period, one row per day if available.",
+    "Outbound here is a one-time payments file for commissions, spiffs and tips (amounts). Hours go to whichever system actually pays them: use that provider's profile (for example adp_wfn) when Bob feeds a provider through Payroll Hub.",
+    "Match the headers to the bulk import template your Bob account provides before uploading."
+  ],
+  "inbound": {
+    "roster": {
+      "columns": {
+        "employee_id": [
+          "Employee ID",
+          "Display ID",
+          "ID",
+          "Employee Id"
+        ],
+        "payroll_id": [
+          "Payroll ID",
+          "File Number",
+          "File #"
+        ],
+        "first_name": [
+          "First name",
+          "First Name"
+        ],
+        "last_name": [
+          "Last name",
+          "Last Name",
+          "Surname"
+        ],
+        "status": [
+          "Lifecycle status",
+          "Status",
+          "Employment status"
+        ],
+        "hire_date": [
+          "Start date",
+          "Start Date",
+          "Original start date"
+        ],
+        "termination_date": [
+          "Termination date",
+          "Termination Date",
+          "Last day of work"
+        ],
+        "location": [
+          "Site",
+          "Work site",
+          "Location"
+        ],
+        "job_title": [
+          "Job title",
+          "Job Title",
+          "Title"
+        ],
+        "pay_rate": [
+          "Base salary",
+          "Salary",
+          "Pay rate",
+          "Hourly rate"
+        ],
+        "pay_type": [
+          "Salary pay type",
+          "Pay type"
+        ],
+        "pay_per": [
+          "Salary pay period",
+          "Pay period"
+        ],
+        "rate_effective": [
+          "Salary effective date",
+          "Effective date"
+        ],
+        "email": [
+          "Email",
+          "Work email"
+        ]
+      },
+      "value_maps": {
+        "status": {
+          "active": "active",
+          "a": "active",
+          "employed": "active",
+          "full-time": "active",
+          "part-time": "active",
+          "full time": "active",
+          "part time": "active",
+          "terminated": "terminated",
+          "t": "terminated",
+          "inactive": "terminated",
+          "leave": "leave",
+          "l": "leave",
+          "leave of absence": "leave",
+          "on leave": "leave",
+          "hired": "active"
+        }
+      }
+    },
+    "time_off": {
+      "columns": {
+        "employee_id": [
+          "Employee ID",
+          "Display ID"
+        ],
+        "employee_name": [
+          "Employee name",
+          "Display name",
+          "Name"
+        ],
+        "date": [
+          "Date",
+          "Date Taken"
+        ],
+        "start_date": [
+          "Start date",
+          "From",
+          "Start Date"
+        ],
+        "end_date": [
+          "End date",
+          "To",
+          "End Date"
+        ],
+        "type": [
+          "Policy type",
+          "Policy",
+          "Time off type",
+          "Type"
+        ],
+        "hours": [
+          "Hours",
+          "Duration (hours)",
+          "Total hours",
+          "Amount"
+        ]
+      },
+      "type_map": {
+        "sick": "sick",
+        "sick leave": "sick",
+        "sick time": "sick",
+        "paid sick": "sick",
+        "pto": "pto",
+        "paid time off": "pto",
+        "vacation": "pto",
+        "personal": "pto",
+        "holiday": "holiday",
+        "bereavement": "bereavement",
+        "jury duty": "jury_duty",
+        "unpaid": "unpaid",
+        "unpaid leave": "unpaid"
+      }
+    }
+  },
+  "outbound": [
+    {
+      "id": "one_time_payments",
+      "label": "One-time payments (amounts)",
+      "layout": "long",
+      "include": "amount",
+      "filename": "bob_one_time_payments_{period_end}.csv",
+      "columns": [
+        [
+          "Employee ID",
+          "payroll_id"
+        ],
+        [
+          "Effective date",
+          "date:pay_date|iso"
+        ],
+        [
+          "Payment type",
+          "code"
+        ],
+        [
+          "Amount",
+          "amount"
+        ],
+        [
+          "Currency",
+          "const:USD"
+        ],
+        [
+          "Reason",
+          "label"
+        ]
+      ]
+    }
+  ]
+}

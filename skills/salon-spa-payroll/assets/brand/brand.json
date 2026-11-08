@@ -1,0 +1,22 @@
+{
+  "name": "Duotone Tape",
+  "source": "The E&O Show brand guide (October 2026)",
+  "colors": {
+    "navy": "141034",
+    "orange": "E58700",
+    "yellow": "F8D300",
+    "cream": "F6ECD4",
+    "white": "FFFFFF",
+    "cream_tint": "FBF6EA"
+  },
+  "fonts": {"hook": "Anton", "label": "Oswald", "body": "Calibri"},
+  "rules": [
+    "Navy is the base: panels, headers, footers.",
+    "Orange is the one accent: thin stripes and rules only.",
+    "Yellow is for hook words on navy.",
+    "Cream for small labels on navy and light highlights.",
+    "Everything square: no rounded corners, gradients or shadows.",
+    "Anton is always uppercase."
+  ],
+  "tagline": "Catch the errors and omissions before payday."
+}

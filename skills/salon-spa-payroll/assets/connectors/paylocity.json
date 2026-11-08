@@ -1,0 +1,198 @@
+{
+  "id": "paylocity",
+  "name": "Paylocity",
+  "status": "Starting template. Download the import template from your own account and compare the column headers and order before the first live upload; copy this file to <workspace>/connectors/ and edit it there.",
+  "docs": [
+    "Outbound is an earnings import in the Det / Det Code layout (E = earning). Det Code must match an earning code set up for your company.",
+    "Paylocity configures each client's import mapping; confirm column order and whether your import expects a header row, then edit this profile.",
+    "Hours rows leave Amount blank so Paylocity applies the rate on file; dollar rows fill Amount.",
+    "Cost Center 1 carries the location code from the config (locations[].payroll_code)."
+  ],
+  "inbound": {
+    "roster": {
+      "columns": {
+        "employee_id": [
+          "Employee Id",
+          "Employee ID",
+          "EE ID",
+          "Emp Id"
+        ],
+        "payroll_id": [
+          "Payroll ID",
+          "File Number",
+          "File #"
+        ],
+        "first_name": [
+          "First Name",
+          "Legal First Name",
+          "First name"
+        ],
+        "last_name": [
+          "Last Name",
+          "Legal Last Name",
+          "Last name",
+          "Surname"
+        ],
+        "status": [
+          "Employee Status",
+          "Status"
+        ],
+        "hire_date": [
+          "Hire Date",
+          "Start Date",
+          "Original Hire Date"
+        ],
+        "termination_date": [
+          "Termination Date",
+          "Term Date"
+        ],
+        "location": [
+          "Work Location",
+          "Location",
+          "Cost Center 1",
+          "Cost Center 1 Description"
+        ],
+        "job_title": [
+          "Job Title",
+          "Position"
+        ],
+        "pay_rate": [
+          "Base Rate",
+          "Rate",
+          "Rate 1",
+          "Annual Salary",
+          "Salary"
+        ],
+        "pay_type": [
+          "Pay Type",
+          "Rate Type",
+          "Base Rate Type"
+        ],
+        "pay_per": [
+          "Pay Per",
+          "Paid Per",
+          "Pay Period"
+        ],
+        "rate_effective": [
+          "Rate Effective Date",
+          "Effective Date"
+        ],
+        "email": [
+          "Work Email",
+          "Email"
+        ]
+      },
+      "value_maps": {
+        "status": {
+          "active": "active",
+          "a": "active",
+          "employed": "active",
+          "full-time": "active",
+          "part-time": "active",
+          "full time": "active",
+          "part time": "active",
+          "terminated": "terminated",
+          "t": "terminated",
+          "inactive": "terminated",
+          "leave": "leave",
+          "l": "leave",
+          "leave of absence": "leave",
+          "on leave": "leave"
+        }
+      }
+    },
+    "time_off": {
+      "columns": {
+        "employee_id": [
+          "Employee Id",
+          "Employee ID"
+        ],
+        "employee_name": [
+          "Employee Name",
+          "Name",
+          "Employee"
+        ],
+        "date": [
+          "Date",
+          "Date Taken",
+          "Request Date"
+        ],
+        "start_date": [
+          "Start Date",
+          "Start",
+          "From"
+        ],
+        "end_date": [
+          "End Date",
+          "End",
+          "To"
+        ],
+        "type": [
+          "Earning Code",
+          "Accrual Type",
+          "Time Off Type",
+          "Type"
+        ],
+        "hours": [
+          "Hours",
+          "Hours Taken"
+        ]
+      },
+      "type_map": {
+        "sick": "sick",
+        "sick leave": "sick",
+        "sick time": "sick",
+        "paid sick": "sick",
+        "pto": "pto",
+        "paid time off": "pto",
+        "vacation": "pto",
+        "personal": "pto",
+        "holiday": "holiday",
+        "bereavement": "bereavement",
+        "jury duty": "jury_duty",
+        "unpaid": "unpaid",
+        "unpaid leave": "unpaid"
+      }
+    }
+  },
+  "outbound": [
+    {
+      "id": "earnings_import",
+      "label": "Earnings import (Det / Det Code)",
+      "layout": "long",
+      "include": "all",
+      "filename": "paylocity_earnings_{period_end}.csv",
+      "include_header": true,
+      "columns": [
+        [
+          "Employee Id",
+          "payroll_id"
+        ],
+        [
+          "Det",
+          "det"
+        ],
+        [
+          "Det Code",
+          "code"
+        ],
+        [
+          "Hours",
+          "hours"
+        ],
+        [
+          "Rate",
+          "rate"
+        ],
+        [
+          "Amount",
+          "amount"
+        ],
+        [
+          "Cost Center 1",
+          "location_code"
+        ]
+      ]
+    }
+  ]
+}

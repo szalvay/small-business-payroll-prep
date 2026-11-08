@@ -1,0 +1,22 @@
+{
+  "name": "salon-spa-payroll",
+  "owner": {
+    "name": "Laszlo Szalvay",
+    "url": "https://github.com/szalvay"
+  },
+  "metadata": {
+    "description": "Salon & Spa Payroll Prep: catch the errors and omissions before payday."
+  },
+  "plugins": [
+    {
+      "name": "salon-spa-payroll",
+      "source": "./",
+      "description": "Payroll prep and error checking for salons, spas, massage and wellness businesses, single or multi-location.",
+      "version": "1.0.0",
+      "author": {"name": "Laszlo Szalvay"},
+      "license": "Apache-2.0",
+      "category": "productivity",
+      "keywords": ["payroll", "salon", "spa", "small business"]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "company": {
+    "name": "",
+    "pay_frequency": "semi_monthly",
+    "workweek_start": "sunday",
+    "ot_aggregation": "employer",
+    "min_wage_makeup": "flag",
+    "cash_tips": "report_only"
+  },
+  "approval": {},
+  "systems": {
+    "hris": "generic",
+    "payroll": "generic",
+    "payroll_settings": {
+      "split_by_location": true
+    },
+    "pos_reports": []
+  },
+  "employers": [],
+  "locations": [],
+  "state_rules": {},
+  "roles": [],
+  "time_pay": [],
+  "time_off_pay": [],
+  "incentives": [],
+  "stipends": [],
+  "manager_allocation": [],
+  "bonus_pools": [],
+  "employee_overrides": [],
+  "pay_codes": {
+    "service_wages": {
+      "label": "Service pay",
+      "code": "",
+      "export_as": "amount"
+    },
+    "service_per_unit": {
+      "label": "Per-service pay",
+      "code": "",
+      "export_as": "amount"
+    },
+    "service_commission": {
+      "label": "Service commission",
+      "code": "",
+      "export_as": "amount"
+    },
+    "regular": {
+      "label": "Regular",
+      "code": "",
+      "export_as": "hours"
+    },
+    "overtime": {
+      "label": "Overtime",
+      "code": "",
+      "export_as": "hours"
+    },
+    "doubletime": {
+      "label": "Double Time",
+      "code": "",
+      "export_as": "hours"
+    },
+    "ot_premium": {
+      "label": "Overtime premium",
+      "code": "",
+      "export_as": "amount"
+    },
+    "card_tips": {
+      "label": "Credit card tips",
+      "code": "",
+      "export_as": "amount"
+    },
+    "cash_tips": {
+      "label": "Cash tips",
+      "code": "",
+      "export_as": "amount"
+    },
+    "salary": {
+      "label": "Salary",
+      "code": "",
+      "export_as": "amount"
+    },
+    "min_wage_makeup": {
+      "label": "Minimum wage make-up",
+      "code": "",
+      "export_as": "amount"
+    },
+    "nonproductive_time": {
+      "label": "Non-productive time",
+      "code": "",
+      "export_as": "amount"
+    },
+    "rest_recovery": {
+      "label": "Rest and recovery",
+      "code": "",
+      "export_as": "amount"
+    }
+  },
+  "checks": {
+    "plausibility": {
+      "min_avg_service_hours": "0.25",
+      "max_avg_service_hours": "4",
+      "max_weekly_hours": "70",
+      "anomaly_threshold": "0.25"
+    }
+  },
+  "intake_notes": []
+}

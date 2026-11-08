@@ -1,0 +1,9 @@
+{
+  "state": "OR",
+  "weekly_ot_threshold": "40",
+  "daily_ot": null,
+  "seventh_day_ot": false,
+  "piece_rate_nonproductive_separate": false,
+  "confirmed_by_owner": false,
+  "notes": "Starting preset (2026). Laws and rates change: confirm every line with your payroll provider or employment counsel, then set confirmed_by_owner. Oregon minimum wage has regional tiers (Portland metro, standard, non-urban) that adjust every July 1: enter each location's own rate."
+}

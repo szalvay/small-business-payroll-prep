@@ -1,0 +1,12 @@
+{
+  "state": "CA",
+  "weekly_ot_threshold": "40",
+  "daily_ot": {
+    "threshold": "8",
+    "double_threshold": "12"
+  },
+  "seventh_day_ot": true,
+  "piece_rate_nonproductive_separate": true,
+  "confirmed_by_owner": false,
+  "notes": "Starting preset (2026). Laws and rates change: confirm every line with your payroll provider or employment counsel, then set confirmed_by_owner. California: daily overtime after 8 hours and double time after 12; seventh consecutive day rules; piece-rate staff are paid separately for rest and recovery periods and other non-productive time (Labor Code 226.2). Pay rest_recovery time at regular_rate in Time Pay."
+}

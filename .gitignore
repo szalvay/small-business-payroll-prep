@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+# a workspace someone runs locally while trying the sample
+/demo/
+/my-*/
+# generated outputs of the sample (re-created by running it)
+skills/salon-spa-payroll/assets/sample_workspace/history/
+skills/salon-spa-payroll/assets/sample_workspace/PAY_RULES_BOOK.*
+skills/salon-spa-payroll/assets/sample_workspace/periods/*/output/*
+!skills/salon-spa-payroll/assets/sample_workspace/periods/*/output/.keep
+skills/salon-spa-payroll/assets/sample_workspace/periods/*/inputs/roster.csv
+skills/salon-spa-payroll/assets/sample_workspace/periods/*/inputs/pay_rates.csv
+skills/salon-spa-payroll/assets/sample_workspace/periods/*/inputs/time_off.csv
