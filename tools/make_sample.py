@@ -341,6 +341,50 @@ def totals(rows, loc_label_to_id, fields, lo, hi):
     return out
 
 
+def write_report(path, title, loc_label, start, end, headers, rows, name_key, numeric, refund_key=None):
+    """A report-style export like a POS would produce: title rows, a header, rows grouped by
+    provider with a subtotal line, and a grand total. Used to practise the mapping step."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Report"
+    ws.append([title])
+    ws["A1"].font = Font(bold=True, size=14)
+    ws.append([f"Location: {loc_label}"])
+    ws.append([f"From {start:%m/%d/%Y} to {end:%m/%d/%Y}"])
+    ws.append([])
+    ws.append([h for h, _ in headers])
+    for c in range(1, len(headers) + 1):
+        ws.cell(row=5, column=c).font = Font(bold=True)
+    grand = defaultdict(lambda: D(0))
+    by_person = defaultdict(list)
+    for r in rows:
+        by_person[r[name_key]].append(r)
+    for person in sorted(by_person):
+        sub = defaultdict(lambda: D(0))
+        for r in sorted(by_person[person], key=lambda x: x["date"]):
+            out = []
+            for h, key in headers:
+                v = r.get(key, "")
+                if key == "date":
+                    v = dt.date.fromisoformat(v).strftime("%m/%d/%Y")
+                elif (key in numeric or key in ("revenue", "customer_price")) and v != "":
+                    v = float(v)
+                out.append(v)
+            ws.append(out)
+            sign = -1 if refund_key and r.get(refund_key) == "Y" else 1
+            for key in numeric:
+                if r.get(key):
+                    sub[key] += sign * D(r[key])
+        ws.append([f"Total for {person}"] + ["" for _ in headers[1:-len(numeric)]] + [float(sub[k]) for k in numeric])
+        for k in numeric:
+            grand[k] += sub[k]
+    ws.append(["Grand total"] + ["" for _ in headers[1:-len(numeric)]] + [float(grand[k]) for k in numeric])
+    ws.cell(row=ws.max_row, column=1).font = Font(bold=True)
+    wb.save(path)
+
+
 def main():
     if DEST.exists():
         shutil.rmtree(DEST)
@@ -401,6 +445,19 @@ def main():
         write_csv(pdir / "inputs" / "adjustments.csv", cols("adjustments"), adjustments)
         write_csv(pdir / "inputs" / "location_metrics.csv", cols("location_metrics"), metrics)
 
+        for loc_id, loc in LOCS.items():
+            label = loc["pos_labels"][0]
+            svc_rows = [r for r in services if r["location"] == label]
+            write_report(pdir / "raw" / f"{loc_id}_service_detail.xlsx", "Service Detail by Provider", label, start, end,
+                         [("Provider", "employee_name"), ("Date", "date"), ("Service Code", "service_code"),
+                          ("Service", "service_name"), ("Category", "category"), ("Refund", "refund"),
+                          ("Revenue", "revenue"), ("Qty", "quantity"), ("Service Hours", "service_hours")],
+                         svc_rows, "employee_name", ("quantity", "service_hours"), refund_key="refund")
+            add_rows = [r for r in addons if r["location"] == label]
+            write_report(pdir / "raw" / f"{loc_id}_addons.xlsx", "Add-On Detail by Provider", label, start, end,
+                         [("Provider", "employee_name"), ("Date", "date"), ("Add-On", "addon_code"),
+                          ("Description", "addon_name"), ("Price", "customer_price"), ("Qty", "quantity")],
+                         add_rows, "employee_name", ("quantity",))
         sources = []
         svc_t = totals(services, label_to_id, ("service_hours", "quantity"), start, end)
         tip_t = totals([t for t in tips if t["tip_type"] == "card"], label_to_id, ("amount",), start, end)
@@ -423,7 +480,10 @@ def main():
                 ([{"employee_id": "E102", "input": "time_entries", "category": "trainer", "minimum": "1",
                    "reason": "Owner asked Downtown to record Ben's training of Jon on 10/20"}] if monthly else []),
             "acknowledged_warnings": ([{"code": "INC_OUTSIDE_WINDOW", "match": "gift_cards", "by": "Owner",
-                                        "note": "Holiday gift card commission covers sales through 10/29 only"}] if monthly else []),
+                                        "note": "Holiday gift card commission covers sales through 10/29 only"}] if monthly else
+                                      [{"code": "GATE_HISTORY_GAP", "by": "Owner",
+                                        "note": "First period run with this tool. Sep 27-30 were paid by the old process; "
+                                                "nobody went over 40 hours that week"}]),
             "salary_proration": None,
             "notes": "Sample period. Raw HRIS exports are in raw/; run hris-import to build roster.csv, pay_rates.csv and time_off.csv.",
         }

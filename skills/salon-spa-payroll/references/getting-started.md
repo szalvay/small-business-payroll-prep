@@ -23,7 +23,14 @@ done
 ```
 
 Run the periods in order: the second one needs the first one's hours for the
-boundary week of October 11.
+boundary week of October 11. The first period starts on a Thursday, so its first
+workweek began in September before this tool was in use; its `period.json` shows the
+owner's acknowledgment of that (`GATE_HISTORY_GAP`), which is what a real first period
+looks like.
+
+The `raw/` folders hold report-style exports (service and add-on detail per location)
+next to the mapped `inputs/` CSVs, so you can see what the mapping step turns into what,
+and how each report's grand total is recorded in `period.json` `sources`.
 
 What to look at in `demo/periods/2026-10-16_2026-10-31/output/`:
 

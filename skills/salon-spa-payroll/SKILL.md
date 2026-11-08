@@ -82,7 +82,10 @@ The owner has no `payroll_config.json` yet, or wants to change how people are pa
 ### 2. Start a pay period
 
 `payroll.py new-period <workspace> --start YYYY-MM-DD --end YYYY-MM-DD --pay-date YYYY-MM-DD`
-(add `--monthly --month-start ... --month-end ...` on the run that pays monthly incentives).
+(add `--monthly` on the run that pays monthly incentives; the window defaults to the
+calendar month of the end date, or set `--month-start` and `--month-end`).
+Run periods in date order: a workweek that straddles two periods needs the earlier
+period's hours. For the very first period, see "history" in `references/config-reference.md`.
 It prints the workweeks the period touches, boundary-week warnings and the export
 checklist from `systems.pos_reports`. Give the owner that checklist.
 
@@ -110,7 +113,8 @@ period, writes the payroll files, and prints ALL CLEAR, NOT CLEAR or BLOCKED.
 - **BLOCKED:** nothing was calculated. Fix the FAIL lines (usually an input problem) and
   run again.
 - **NOT CLEAR:** read the reasons. Fix inputs or rules; for a warning the owner accepts,
-  add their acknowledgment to `period.json`. Run again.
+  add their acknowledgment to `period.json`. Run again. Upload files from a NOT CLEAR
+  run are named `DO_NOT_UPLOAD_...`; every run clears the previous run's outputs first.
 - **ALL CLEAR:** send the owner `output/payroll_review_<date>.xlsx`, `run_summary.html`
   and the upload file(s). Point out anything in Findings and Incentive Notes they should
   know. The owner reviews and uploads; you do not.

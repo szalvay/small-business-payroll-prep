@@ -20,7 +20,7 @@ from .gates import run_gates
 from .inputs import load_inputs
 from .period import CONFIG_NAME, History, Period, find_workspace
 from .report import write_summary
-from .util import D, ZERO, Findings, file_sha256, fmt_money, money, write_json
+from .util import D, ZERO, Findings, file_sha256, fmt_money, money, read_json, workweeks, write_json
 from .workbook import build_workbook
 
 
@@ -31,6 +31,7 @@ def run_period(period_dir, write_history=True, draft=False):
     findings = Findings()
     findings.extend(validate_config(cfg))
     period.output_dir.mkdir(parents=True, exist_ok=True)
+    _clear_previous_outputs(period)
 
     inputs, in_findings = load_inputs(period, cfg)
     findings.extend(in_findings)
@@ -42,6 +43,7 @@ def run_period(period_dir, write_history=True, draft=False):
         return {"status": status, "exit": 1, "findings": findings, "period": period, "cfg": cfg}
 
     history = History(workspace)
+    _history_gap(cfg, period, history, findings)
     result = calculate(cfg, period, inputs, history)
     findings.extend(result.findings)
     checks = run_checks(cfg, period, inputs, result)
@@ -87,6 +89,12 @@ def run_period(period_dir, write_history=True, draft=False):
     if not cfg.approved and not draft:
         reasons.append("the owner has not signed off the current Pay Rules Book")
     status = "ALL CLEAR" if not reasons else "NOT CLEAR"
+    if status != "ALL CLEAR":
+        for ex in exports:
+            src = Path(ex["file"])
+            dest = src.with_name(f"DO_NOT_UPLOAD_{src.name}")
+            src.replace(dest)
+            ex["file"] = str(dest)
 
     stamp = period.end.isoformat()
     wb_path = period.output_dir / f"payroll_review_{stamp}.xlsx"
@@ -108,11 +116,55 @@ def run_period(period_dir, write_history=True, draft=False):
     }
     write_json(period.output_dir / "evidence.json", evidence)
     write_summary(period, cfg, status, reasons, result, checks, audit_result, findings, exports, earnings_total)
+    _remember_outputs(period, [wb_path] + [Path(e["file"]) for e in exports])
     if write_history:
         history.record(period.id, result.history_days, result.history_weeks)
     return {"status": status, "exit": 0 if status == "ALL CLEAR" else 2, "findings": findings, "result": result,
             "checks": checks, "audit": audit_result, "exports": exports, "period": period, "cfg": cfg,
             "workbook": wb_path, "earnings_total": earnings_total, "reasons": reasons}
+
+
+GENERATED = ("payroll_review_*.xlsx", "run_summary.md", "run_summary.html", "evidence.json", "employee_totals.csv",
+             "DO_NOT_UPLOAD_*")
+
+
+def _clear_previous_outputs(period):
+    """A re-run must never leave an earlier run's ALL CLEAR files next to a new result."""
+    out = period.output_dir
+    manifest = out / ".generated.json"
+    names = set()
+    if manifest.exists():
+        try:
+            names.update(read_json(manifest))
+        except (ValueError, OSError):
+            pass
+    for pattern in GENERATED:
+        names.update(p.name for p in out.glob(pattern))
+    for name in names:
+        target = out / name
+        if target.is_file():
+            target.unlink()
+    if manifest.exists():
+        manifest.unlink()
+
+
+def _remember_outputs(period, paths):
+    write_json(period.output_dir / ".generated.json", sorted({Path(p).name for p in paths} |
+               {"run_summary.md", "run_summary.html", "evidence.json", "employee_totals.csv"}))
+
+
+def _history_gap(cfg, period, history, findings):
+    """A boundary week needs the earlier period's hours. Say so when no run covers them."""
+    weeks = workweeks(period.start, period.end, cfg.workweek_start)
+    if not weeks or weeks[0] >= period.start:
+        return
+    day_before = period.start - _dt.timedelta(days=1)
+    if any(lo <= day_before <= hi for lo, hi in history.periods()):
+        return
+    findings.warn("GATE_HISTORY_GAP", f"the workweek of {weeks[0]} started before this period, but no earlier run in this "
+                  f"workspace covers {weeks[0]}..{day_before}. Overtime for that week counts only this period's hours. Run "
+                  "the previous period first (its hours are recorded even if it was already paid elsewhere), or acknowledge "
+                  "this and check that week's overtime by hand")
 
 
 # Warnings handled by their own reason (the rules sign-off) rather than per-period acknowledgment.

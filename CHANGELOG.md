@@ -17,4 +17,4 @@ First public release.
   the config; Pay Rules Book with rule IDs, fingerprint and sign-off.
 - Connectors: BambooHR, ADP Workforce Now, Paylocity, HiBob and generic profiles for
   roster, rate and time-off imports and payroll upload files.
-- Sample three-location spa workspace and 34 engine tests.
+- Sample three-location spa workspace with report-style raw exports, and 41 engine tests.

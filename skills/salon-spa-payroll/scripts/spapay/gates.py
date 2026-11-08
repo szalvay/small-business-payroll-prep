@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from .util import D, ZERO, Findings, week_start
+from .util import D, ZERO, Findings, parse_date, week_start
 
 SOURCE_TOTAL_FIELDS = {
     "services": ("service_hours", "quantity", "revenue"),
@@ -58,6 +58,12 @@ def run_gates(cfg, period, inputs):
     bonus_active = [bp for bp in cfg.bonus_pools
                     if bp.get("frequency", "monthly") == "pay_period" or period.include_monthly]
     sources_needed["location_metrics"] = bool(bonus_active)
+
+    monthly_users = [x.get("id") for x in list(cfg.incentives) + list(cfg.bonus_pools)
+                     if x.get("frequency", "monthly" if x in cfg.bonus_pools else "pay_period") == "monthly"]
+    if period.include_monthly and monthly_users and not period.monthly_window:
+        f.fail("GATE_NO_MONTHLY_WINDOW", f"this is a month-end run (include_monthly) but period.json has no monthly_window; "
+               f"{', '.join(monthly_users)} need it. Set monthly_window to the month's first and last day")
 
     for name, needed in sources_needed.items():
         if not needed:
@@ -141,10 +147,11 @@ def run_gates(cfg, period, inputs):
         mapped = src.get("mapped_to")
         lo, hi = src.get("date_from"), src.get("date_to")
         if lo and hi:
-            from .util import parse_date
             lo, hi = parse_date(lo), parse_date(hi)
             win = None
-            if src.get("window"):
+            if isinstance(src.get("window"), dict):
+                win = (parse_date(src["window"]["start"]), parse_date(src["window"]["end"]))
+            elif src.get("window"):
                 win = period.windows.get(src["window"]) or (period.monthly_window if src["window"] == "monthly" else None)
             expected = win or (period.start, period.end)
             if (lo, hi) != expected:

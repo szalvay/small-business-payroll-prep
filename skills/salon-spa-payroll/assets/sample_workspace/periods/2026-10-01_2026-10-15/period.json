@@ -92,7 +92,13 @@
   ],
   "approved_variances": [],
   "expected_activity": [],
-  "acknowledged_warnings": [],
+  "acknowledged_warnings": [
+    {
+      "code": "GATE_HISTORY_GAP",
+      "by": "Owner",
+      "note": "First period run with this tool. Sep 27-30 were paid by the old process; nobody went over 40 hours that week"
+    }
+  ],
   "salary_proration": null,
   "notes": "Sample period. Raw HRIS exports are in raw/; run hris-import to build roster.csv, pay_rates.csv and time_off.csv."
 }

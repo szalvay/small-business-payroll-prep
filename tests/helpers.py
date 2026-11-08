@@ -84,7 +84,8 @@ class Workspace:
         data = {"period_start": start, "period_end": end, "pay_date": end, "include_monthly": False,
                 "monthly_window": None, "windows": {}, "attestations": [], "sources": [], "approved_variances": [],
                 "expected_activity": [], "salary_proration": None,
-                "acknowledged_warnings": [{"code": "GATE_NO_SOURCES", "by": "Tester", "note": "unit test"}]}
+                "acknowledged_warnings": [{"code": "GATE_NO_SOURCES", "by": "Tester", "note": "unit test"},
+                                          {"code": "GATE_HISTORY_GAP", "by": "Tester", "note": "unit test"}]}
         files = dict(files or {})
         if "time_off" not in files and not period_fields.get("keep_time_off_gate"):
             data["attestations"].append({"input": "time_off", "location_id": "*", "statement": "none", "by": "Tester"})

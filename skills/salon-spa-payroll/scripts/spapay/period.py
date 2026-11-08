@@ -158,6 +158,20 @@ class History:
     def has_any(self):
         return bool(self.data["days"])
 
+    def periods(self):
+        """(start, end) of every period that has written history in this workspace."""
+        ids = {rec.get("period") for rec in self.data["days"].values()}
+        for weeks in self.data["weeks"].values():
+            ids.update(weeks)
+        out = []
+        for pid in ids:
+            try:
+                lo, hi = (parse_date(x) for x in str(pid).split("_"))
+                out.append((lo, hi))
+            except (ValueError, TypeError):
+                continue
+        return sorted(out)
+
     def record(self, period_id, day_rows, week_rows):
         # drop prior entries written by this same period (idempotent re-runs)
         self.data["days"] = {k: v for k, v in self.data["days"].items() if v.get("period") != period_id}

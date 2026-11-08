@@ -206,7 +206,8 @@ class Incentives(Base):
         self.assertEqual(total(out, "F1", "gc_commission"), D("3.00"))
         self.assertIn("INC_OUTSIDE_WINDOW", codes(out["findings"], "WARN"))
         self.assertEqual(out["status"], "NOT CLEAR")
-        acks = [{"code": "GATE_NO_SOURCES", "by": "T"}, {"code": "INC_OUTSIDE_WINDOW", "match": "gc:", "by": "Owner", "note": "promo"}]
+        acks = [{"code": "GATE_NO_SOURCES", "by": "T"}, {"code": "GATE_HISTORY_GAP", "by": "T"},
+                {"code": "INC_OUTSIDE_WINDOW", "match": "gc:", "by": "Owner", "note": "promo"}]
         out = self.ws.run(self.ws.period(*P2, FD, FD_RATE, files=files, windows=windows, acknowledged_warnings=acks))
         self.assertEqual(out["status"], "ALL CLEAR", out["reasons"])
 
@@ -287,12 +288,65 @@ class Gates(Base):
         self.assertEqual(out["status"], "NOT CLEAR")
 
     def test_unused_acknowledgment_is_reported(self):
-        acks = [{"code": "GATE_NO_SOURCES", "by": "T"}, {"code": "GATE_DUP_ROW", "by": "T"}]
+        acks = [{"code": "GATE_NO_SOURCES", "by": "T"}, {"code": "GATE_HISTORY_GAP", "by": "T"}, {"code": "GATE_DUP_ROW", "by": "T"}]
         out = self.ws.run(self.ws.period(*P1, LMT, LMT_RATE, files={"services": [svc("E1", "2026-10-05", 4)]}, acknowledged_warnings=acks))
         self.assertIn("ACK_UNUSED", codes(out["findings"], "INFO"))
 
 
+class Reruns(Base):
+    def test_blocked_rerun_removes_the_earlier_all_clear_files(self):
+        pdir = self.ws.period(*P1, LMT, LMT_RATE, files={"services": [svc("E1", "2026-10-05", 4)]})
+        self.assertEqual(self.ws.run(pdir)["status"], "ALL CLEAR")
+        (pdir / "inputs" / "services.csv").write_text("employee_id,location,date,category,quantity,service_hours\n"
+                                                     "E1,A,2026-10-05,massage,1,0\n")
+        out = self.ws.run(pdir)
+        self.assertEqual(out["status"], "BLOCKED")
+        left = sorted(p.name for p in (pdir / "output").iterdir())
+        self.assertEqual(left, ["evidence.json", "run_summary.md"])
+
+    def test_not_clear_upload_files_say_do_not_upload(self):
+        self.ws.close()
+        self.ws = Workspace(approve=False)
+        out = self.ws.run(self.ws.period(*P1, LMT, LMT_RATE, files={"services": [svc("E1", "2026-10-05", 4)]}))
+        self.assertEqual(out["status"], "NOT CLEAR")
+        self.assertTrue(all(Path(e["file"]).name.startswith("DO_NOT_UPLOAD_") for e in out["exports"]))
+
+    def test_skipping_the_previous_period_is_a_warning(self):
+        acks = [{"code": "GATE_NO_SOURCES", "by": "T"}]
+        out = self.ws.run(self.ws.period(*P2, FD, FD_RATE, files={"time_entries": [clock("F1", "2026-10-16", 8)]},
+                                         acknowledged_warnings=acks))
+        self.assertIn("GATE_HISTORY_GAP", codes(out["findings"], "WARN"))
+        self.assertEqual(out["status"], "NOT CLEAR")
+
+    def test_month_end_run_needs_a_monthly_window(self):
+        self.build({"incentives": [{"id": "retail", "source": "sales", "kind": "percent", "frequency": "monthly",
+                                    "pay_code": "retail_commission", "rates": [{"match": "category", "value": "retail", "rate": "10"}]}]})
+        out = self.ws.run(self.ws.period(*P2, FD, FD_RATE, files={"time_entries": [clock("F1", "2026-10-20", 8)]},
+                                         include_monthly=True))
+        self.assertIn("GATE_NO_MONTHLY_WINDOW", codes(out["findings"], "FAIL"))
+
+    def test_new_period_defaults_the_monthly_window(self):
+        import contextlib
+        import io
+        from spapay.cli import main
+        with contextlib.redirect_stdout(io.StringIO()):
+            main(["new-period", str(self.ws.root), "--start", "2026-11-16", "--end", "2026-11-30", "--monthly"])
+        data = json.loads((self.ws.root / "periods" / "2026-11-16_2026-11-30" / "period.json").read_text())
+        self.assertEqual(data["monthly_window"], {"start": "2026-11-01", "end": "2026-11-30"})
+
+    def test_source_window_can_be_a_date_range(self):
+        src = [{"file": "raw/s.xlsx", "report": "Sales", "location_id": "A", "date_from": "2026-10-01", "date_to": "2026-10-31",
+                "mapped_to": "sales", "window": {"start": "2026-10-01", "end": "2026-10-31"}, "totals": {"amount": "0"}}]
+        out = self.ws.run(self.ws.period(*P2, FD, FD_RATE, files={"time_entries": [clock("F1", "2026-10-20", 8)]}, sources=src))
+        self.assertNotIn("GATE_SOURCE_DATES", codes(out["findings"]))
+
+
 class ConfigAndOutputs(Base):
+    def test_blank_processor_code_fails_validation(self):
+        cfg = copy.deepcopy(BASE)
+        cfg["pay_codes"]["card_tips"]["code"] = ""
+        self.assertIn("CFG_PAYCODE_BLANK", codes(validate_config(Config(cfg)), "FAIL"))
+
     def test_missing_pay_code_blocks(self):
         cfg = copy.deepcopy(BASE)
         del cfg["pay_codes"]["lobby"]

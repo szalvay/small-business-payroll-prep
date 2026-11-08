@@ -88,6 +88,26 @@ Keyed by state code. Load presets from `assets/states/` (see `state-rules.md`).
 Rate types in `pay_rates.csv` must fit the basis: `service_hour`, `per_service`,
 `service_pct` (a percent, `"40"` = 40%), `hourly`, `salary_annual` or `salary_period`.
 
+Which engine pay types each basis produces (each needs a processor code in `pay_codes`):
+
+| pay_basis | Pay types |
+|---|---|
+| `piece_service_hour` | `service_wages`, plus `ot_premium` for overtime |
+| `piece_per_service` | `service_per_unit`, plus `ot_premium` |
+| `service_revenue_pct` | `service_commission`, plus `ot_premium` |
+| `hourly` | `regular`, `overtime` (and `doubletime` in daily-overtime states), plus `ot_premium` when incentives raise the regular rate |
+| `salary` | `salary` |
+
+Roles with `tips: true` produce `card_tips` (and `cash_tips` when cash tips are recorded).
+`min_wage_makeup` appears when `company.min_wage_makeup` is `auto`, and
+`nonproductive_time` in states with `piece_rate_nonproductive_separate`. `validate` fails
+until every pay type the rules can produce has a non-blank `code`.
+
+For piece-rate or commission roles whose hours come from the clock
+(`hours_worked_source: clock`), `worked` time with no `time_pay` rule counts as hours
+worked for overtime and minimum wage but is not paid on its own: their pay comes from
+services. Add a `worked` rule only if you really pay clock time on top of services.
+
 ## time_pay
 
 How each kind of recorded non-service time is paid, per role (`"*"` = any role).
@@ -201,12 +221,26 @@ rules. Open items live here until the owner decides.
 | Field | Meaning |
 |---|---|
 | `period_start`, `period_end`, `pay_date` | |
-| `include_monthly`, `monthly_window` | Month-end runs pay monthly incentives and pools over `{"start", "end"}` |
+| `include_monthly`, `monthly_window` | Month-end runs pay monthly incentives and pools over `{"start", "end"}`. `new-period --monthly` fills in the calendar month of the period end; a month-end run without a window is BLOCKED |
 | `windows` | Per incentive or pool id: `{"start", "end"}` (seasonal gift card windows). Matching rows inside the period but outside the window are reported |
 | `attestations` | `{"input", "location_id", "statement", "by"}`: an input with genuinely nothing this period (`time_off` must be attested per location when there are no rows) |
-| `sources` | One per report: `file`, `report`, `location_id`, `date_from`, `date_to`, `mapped_to`, `totals` (the report's own printed totals), optional `window` |
+| `sources` | One per report: `file`, `report`, `location_id`, `date_from`, `date_to`, `mapped_to`, `totals` (the report's own printed totals), and `window` when the report covers more than the pay period: an id from `windows`, `"monthly"`, or `{"start", "end"}` |
 | `expected_activity` | `{"employee_id", "input", "category", "minimum", "reason"}`: something the owner said must be in the data |
 | `approved_variances` | `{"check", "location_id", "reason", "by"}`: a reconciliation difference the owner accepted (shows PASS*) |
 | `acknowledged_warnings` | `{"code", "match", "by", "note"}`: a warning the owner decided is fine. Unused entries are reported so they cannot hide a future warning |
 | `salary_proration` | Optional factor (e.g. `"0.5"`) overriding day-count proration |
 | `notes` | |
+
+## history/weeks.json
+
+Written by every run that gets past the gates: hours, straight-time earnings and
+overtime paid per person, per day and per workweek. The next period reads it for the
+boundary week and for monthly overtime true-ups. Re-running a period replaces its own
+entries, so re-runs never double count.
+
+Run periods in order. When a period starts mid-week and no earlier run covers the days
+before it (the first period you run with this tool, or a skipped period), the run warns
+`GATE_HISTORY_GAP`. Either run the earlier period first (its hours are recorded even if
+it was paid some other way), or acknowledge the warning and check that week's overtime
+by hand.
+

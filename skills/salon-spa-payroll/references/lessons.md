@@ -32,6 +32,8 @@ anything is calculated), a check (reconciles after), or a warning (needs a decis
 | 23 | A rate change mid-period was applied to the whole period. | Dated rate rows; hourly lines split by rate; `EXPORT_RATE_ON_FILE` when the payroll system pays hours at one rate |
 | 24 | A split salary lost a cent, so cost-split reports did not tie. | Penny-exact allocation |
 | 25 | A corrupt or truncated export was read as "no data". | Unreadable files stop the mapping; report totals catch partial files |
+| 26 | A re-run that failed left the earlier run's "all clear" files in the folder, and the wrong file was nearly sent. | Every run clears the previous outputs first; upload files from a run that is not clear are named `DO_NOT_UPLOAD_` |
+| 27 | A period was run before the one ahead of it, so its first workweek's overtime ignored the earlier days. | `GATE_HISTORY_GAP` |
 
 When a new kind of mistake happens, add a gate or check for it, add a test that
 reproduces it in `tests/`, and add a row here.

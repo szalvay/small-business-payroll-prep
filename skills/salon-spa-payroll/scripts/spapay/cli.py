@@ -83,6 +83,12 @@ def cmd_new_period(a):
     ws = find_workspace(Path(a.workspace))
     cfg = load_config(ws / CONFIG_NAME)
     mw = {"start": a.month_start, "end": a.month_end} if a.month_start and a.month_end else None
+    if a.monthly and mw is None:
+        end = _dt.date.fromisoformat(a.end)
+        first = end.replace(day=1)
+        last = (first.replace(day=28) + _dt.timedelta(days=4)).replace(day=1) - _dt.timedelta(days=1)
+        mw = {"start": first.isoformat(), "end": last.isoformat()}
+        print(f"monthly window set to the calendar month {mw['start']}..{mw['end']} (use --month-start/--month-end to change)")
     pdir = new_period(ws, a.start, a.end, a.pay_date, a.monthly, mw)
     from .inputs import write_templates
     write_templates(pdir / "inputs")
@@ -208,7 +214,10 @@ def cmd_sample(a):
         print(f"{dest} is not empty")
         return 1
     shutil.copytree(src, dest, dirs_exist_ok=True)
-    print(f"copied the sample spa workspace to {dest}; try: run {dest}/periods/<period>")
+    print(f"copied the sample spa workspace to {dest}. Next, as in references/getting-started.md:\n"
+          f"  approve {dest} --by \"Your Name\"\n"
+          f"  then for each folder in {dest}/periods, oldest first: hris-import <period> --roster <period>/raw/bamboohr_roster_export.csv "
+          f"--time-off <period>/raw/bamboohr_time_off_used.csv, then run <period>")
     return 0
 
 
@@ -227,7 +236,8 @@ def main(argv=None):
     s.add_argument("target"); s.add_argument("--by", required=True); s.add_argument("--notes"); s.set_defaults(fn=cmd_approve)
     s = sub.add_parser("new-period", help="create a pay period folder and print the export checklist")
     s.add_argument("workspace"); s.add_argument("--start", required=True); s.add_argument("--end", required=True)
-    s.add_argument("--pay-date"); s.add_argument("--monthly", action="store_true", help="month-end run: pay monthly incentives")
+    s.add_argument("--pay-date"); s.add_argument("--monthly", action="store_true",
+                   help="month-end run: pay monthly incentives (window defaults to the calendar month of --end)")
     s.add_argument("--month-start"); s.add_argument("--month-end"); s.set_defaults(fn=cmd_new_period)
     s = sub.add_parser("templates", help="write blank canonical input CSVs")
     s.add_argument("directory"); s.set_defaults(fn=cmd_templates)

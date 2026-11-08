@@ -149,6 +149,29 @@ def used_pay_keys(cfg: Config):
     return keys
 
 
+def engine_keys_needed(cfg: Config):
+    """Engine pay types these rules can produce, so their processor codes are required up front."""
+    keys = set()
+    bases = {r.get("pay_basis") for r in cfg.roles.values()}
+    non_exempt = any(not (r.get("exempt") or r.get("pay_basis") == "salary") for r in cfg.roles.values())
+    keys |= {"service_wages"} if "piece_service_hour" in bases else set()
+    keys |= {"service_per_unit"} if "piece_per_service" in bases else set()
+    keys |= {"service_commission"} if "service_revenue_pct" in bases else set()
+    keys |= {"regular", "overtime"} if "hourly" in bases else set()
+    keys |= {"salary"} if "salary" in bases else set()
+    if non_exempt:
+        keys.add("ot_premium")
+    if any(r.get("tips") for r in cfg.roles.values()):
+        keys.add("card_tips")
+    if "hourly" in bases and any((v or {}).get("daily_ot") for v in cfg.state_rules.values()):
+        keys.add("doubletime")
+    if cfg.company.get("min_wage_makeup") == "auto":
+        keys.add("min_wage_makeup")
+    if any((v or {}).get("piece_rate_nonproductive_separate") for v in cfg.state_rules.values()):
+        keys.add("nonproductive_time")
+    return keys
+
+
 def validate_config(cfg: Config) -> Findings:
     """Structural and logical checks. FAIL = cannot run payroll on these rules."""
     f = Findings()
@@ -290,15 +313,19 @@ def validate_config(cfg: Config) -> Findings:
         if o.get("secondary_role") and o["secondary_role"] not in cfg.roles:
             f.fail("CFG_OVERRIDE", f"employee_overrides {o.get('employee_id')}: unknown secondary_role {o['secondary_role']!r}")
 
-    needed = used_pay_keys(cfg)
+    needed = used_pay_keys(cfg) | engine_keys_needed(cfg)
     for key in sorted(needed | set(cfg.pay_codes)):
         entry = cfg.pay_codes.get(key)
         if entry is None:
             f.fail("CFG_PAYCODE", f"pay_codes: no processor pay code for {key!r}")
-        elif entry.get("export_as", "amount") not in EXPORT_AS:
+            continue
+        if entry.get("export_as", "amount") not in EXPORT_AS:
             f.fail("CFG_PAYCODE", f"pay_codes[{key}].export_as must be 'hours', 'amount' or 'none'")
+        if key in needed and entry.get("export_as", "amount") != "none" and not str(entry.get("code") or "").strip():
+            f.fail("CFG_PAYCODE_BLANK", f"pay_codes[{key}].code is blank; enter the exact earning name or code your payroll "
+                   "system uses for it")
     for key in ENGINE_PAY_KEYS:
-        if key not in cfg.pay_codes:
+        if key not in cfg.pay_codes and key not in needed:
             f.info("CFG_PAYCODE_ENGINE", f"pay_codes has no entry for engine pay type {key!r}; a run that produces it will stop and ask")
 
     if not cfg.approved:
