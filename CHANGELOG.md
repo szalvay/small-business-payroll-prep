@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- `references/lessons.md` reworded as failure modes ("what can go wrong") rather than
+  past events; README's "Why this exists" wording matched.
+
 ## 1.1.0 (2026-11)
 
 Now for small businesses in general, not only salons and spas.

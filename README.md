@@ -125,8 +125,8 @@ glue work in the middle.
 Alison built the original version with Claude, with Laszlo's help, to run the real payroll
 for a five-location business with hourly staff, piece-rate pay, commissions and tips. A
 job that took three or four people three days became one person and about half an hour,
-from "go" to a checked, audited payroll. Every check in it exists because something like
-it once went wrong. [Read the lessons](skills/small-business-payroll-prep/references/lessons.md).
+from "go" to a checked, audited payroll. Every check in it covers a specific way payroll
+like this can go wrong. [Read the lessons](skills/small-business-payroll-prep/references/lessons.md).
 
 We are giving it away because every small business owner we know has a version of that
 story.
